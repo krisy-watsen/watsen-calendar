@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendar</title>
+
+  <!-- FullCalendar (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <span class="dot"></span>
+        <span class="name">Krisy Calendar</span>
+      </div>
+      <div class="cloud">
+        <button class="btn" id="googleLoginBtn">Google 登录</button>
+        <span class="help" id="cloudStatus">云端：未连接</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <button class="btn" id="prevBtn">◀</button>
+      <button class="btn" id="todayBtn">今天</button>
+      <button class="btn" id="nextBtn">▶</button>
+
+      <div class="titlebar" id="titlebar">—</div>
+
+      <div class="seg">
+        <button data-view="dayGridMonth" class="active">月</button>
+        <button data-view="timeGridWeek">周</button>
+        <button data-view="timeGridDay">日</button>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <button class="btn btn-primary" id="addBtn">＋ 创建事件</button>
+      <button class="btn" id="cleanupBtn" title="只删除云端未被任何事件引用的附件">🧹 智能清理</button>
+
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="wrap">
+    <aside class="sidebar">
+      <div class="side-section">
+        <div class="side-title">迷你日历</div>
+        <div class="mini" id="miniCal"></div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-title">导出</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="help" style="margin-bottom:6px;">导出时间段（可选）</div>
+          <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+          <input class="btn" style="padding:8px 10px; width:100%;" id="exportStart" type="date" />
+          <span class="help">—</span>
+          <input class="btn" style="padding:8px 10px; width:100%;" id="exportEnd" type="date" />
+      </div>
+
+          <button class="btn" id="exportMyViewBtn">导出 My_View（自用）</button>
+          <button class="btn" id="exportTaxBtn">导出 Tax_Export（报税）</button>
+          <div class="help">当前为原型：导出为 CSV（下载）。</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div id="calendar"></div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h3 id="modalTitle">创建事件</h3>
+        <button class="btn" id="closeBtn">关闭</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="grid2">
+          <div class="field">
+            <label class="req">Type</label>
+            <select id="type">
+              <option value="Work">Work</option>
+              <option value="Expense">Expense</option>
+              <option value="Life">Life</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="req">Date</label>
+            <input id="date" type="date" />
+          </div>
+
+          <div class="field" id="startField">
+            <label class="req">Start</label>
+            <input id="start" type="time" />
+          </div>
+
+          <div class="field" id="durationField">
+            <label id="durationLabel">Duration（小时）</label>
+            <input id="duration" type="number" step="0.25" min="0" />
+            <div class="help" id="durationHelp">Work：完工后必填；Life：可选。</div>
+          </div>
+
+          <div class="field" id="clientField">
+            <label class="req">Client</label>
+            <select id="client"></select>
+
+            <!-- 自动显示地址 + 地图链接 -->
+            <div class="help" id="clientAddressBox" style="display:none;">
+              <a id="clientMapLink" href="#" target="_blank" rel="noopener noreferrer"></a>
+            </div>
+
+            <div class="help">只在 Work 出现（必填）</div>
+          </div>
+
+          <div class="field" id="repeatField">
+            <label>Repeat</label>
+            <select id="repeat">
+              <option value="none">永不</option>
+              <option value="weekly">每周</option>
+              <option value="fortnightly">每两周</option>
+            </select>
+            <div class="help">仅 Work：创建时自动生成 6 次（含本次）</div>
+          </div>
+
+          <div class="field">
+            <label>Title（可选）</label>
+            <input id="title" type="text" />
+          </div>
+
+          <div class="field" id="amountField">
+            <label class="req">Amount</label>
+            <input id="amount" type="number" step="0.01" min="0" />
+            <div class="help" id="amountHelp">Expense 在显示层会自动显示为负数。</div>
+          </div>
+
+          <div class="field" id="categoryField">
+            <label class="req">Category</label>
+            <select id="category">
+              <option value="">请选择</option>
+              <option value="Tools">Tools</option>
+              <option value="Fuels">Fuels</option>
+              <option value="Vehicle">Vehicle</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- ✅ Sprint2：附件（拍照/上传 + 缩略图 + 可删除/新增） -->
+          <div class="field" id="attachmentField" style="grid-column: 1 / -1;">
+            <label id="attachmentLabel">Attachments</label>
+
+            <input
+              id="attachmentFiles"
+              type="file"
+              accept="image/*"
+              capture="environment"
+              multiple
+            />
+
+            <div class="thumb-grid" id="attachmentPreview"></div>
+
+            <div class="help" id="attachmentHelp">
+              Expense：必填（票据）。Work：可选（完工照）。Life：不出现。<br/>
+              提示：附件需要 Google 登录（云端存储在 Drive）。
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;" class="help" id="validationHint"></div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn" id="deleteBtn" style="margin-right:auto; display:none;">删除</button>
+        <button class="btn" id="saveDraftBtn">保存（排班/草稿）</button>
+        <button class="btn btn-primary" id="saveBtn">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 图片预览（点缩略图打开大图） -->
+  <div class="img-viewer" id="imgViewer" style="display:none;">
+    <div class="img-viewer-inner">
+      <button class="btn" id="imgViewerClose">关闭</button>
+      <img id="imgViewerImg" alt="preview" />
+    </div>
+  </div>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
