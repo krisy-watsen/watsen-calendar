@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Invoice</title>
+  <style>
+    :root{
+      --page-bg:#f5f5f5;
+      --card:#ffffff;
+      --ink:#111111;
+      --muted:#6b7280;
+      --line:rgba(0,0,0,.10);
+      --bar:#2b2b2b;
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --field:#ffffff;
+      --field-border: rgba(0,0,0,.16);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:var(--page-bg);
+      font-family:var(--font);
+      color:var(--ink);
+    }
+
+    .page{
+      max-width: 860px;
+      margin: 28px auto;
+      padding: 18px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding: 34px 36px;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:flex-start;
+      gap: 14px;
+      min-width: 260px;
+    }
+
+    .logo{
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,.18);
+      position: relative;
+      flex: 0 0 auto;
+    }
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background:#111;
+      opacity:.9;
+    }
+
+    .brandText{ line-height: 1.35; margin-top: 1px; }
+    .brandName{ font-weight: 700; letter-spacing: .2px; font-size: 14px; }
+    .brandMeta{ font-size: 12px; color: var(--muted); }
+
+    .invoiceTitle{ text-align:right; }
+    .invoiceTitle h1{
+      margin:0;
+      font-size: 16px;
+      letter-spacing: .28em;
+      font-weight: 700;
+    }
+    .invoiceTitle .sub{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .billRow{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin: 18px 0 16px;
+    }
+
+    .blockTitle{
+      font-size: 12px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+      letter-spacing: .02em;
+    }
+
+    .kv{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .kv b{ color: var(--ink); font-weight: 700; }
+
+    /* ===== Input fields (no placeholders) ===== */
+
+    /* ===== Floating label field (label inside box, not placeholder) ===== */
+    .floatField{
+      position: relative;
+      width: 100%;
+    }
+    .floatLabel{
+      position:absolute;
+      top: -8px;
+      left: 12px;
+      padding: 0 6px;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--card);
+      border-radius: 999px;
+    }
+    .floatInput{
+      padding-top: 12px; /* make room for label */
+    }
+
+    .field{
+      display:block;
+      width:100%;
+      min-height: 34px;
+      border: 1px solid var(--field-border);
+      border-radius: 10px;
+      background: var(--field);
+      padding: 8px 10px;
+      color: var(--ink);
+      outline: none;
+    }
+    .field.inline{ display:inline-block; width:auto; min-width: 180px; }
+    .field:focus{ box-shadow: 0 0 0 3px rgba(0,0,0,.06); }
+
+    /* ===== Table ===== */
+    table{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 14px;
+      font-size: 12px;
+    }
+    thead th{
+      background: var(--bar);
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 10px 12px;
+    }
+    thead th:first-child{ border-top-left-radius: 8px; }
+    thead th:last-child{ border-top-right-radius: 8px; }
+
+    tbody td{
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      padding: 14px 12px; /* less tight */
+      vertical-align: top;
+    }
+    tbody tr:last-child td{ border-bottom: none; }
+
+    .col-product{ width: 50%; }
+    .col-price, .col-qty, .col-total{ width: 16%; text-align:right; }
+    .muted{ color: var(--muted); }
+
+    .cellField{
+      width: 100%;
+      text-align: left;
+      border-radius: 10px;
+      border: 1px solid var(--field-border);
+      padding: 8px 10px;
+      background: #fff;
+      outline:none;
+      font: inherit;
+    }
+    .cellField.num{ text-align:right; }
+
+        .moneyWrap{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap: 6px;
+    }
+    .moneySym{
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* optional details */
+    .detailsToggle{
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      cursor:pointer;
+      user-select:none;
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .detailsBox{ margin-top: 8px; }
+    .detailsBox textarea{
+      width:100%;
+      min-height: 56px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid var(--field-border);
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 12px;
+      outline:none;
+    }
+
+    
+    .col-action{ width: 44px; text-align:center; }
+    .rowDel{
+      appearance:none;
+      border: 1px solid rgba(0,0,0,.14);
+      background: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      cursor:pointer;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--muted);
+    }
+    .rowDel:hover{ background: rgba(0,0,0,.04); color: var(--ink); }
+
+    @media print{
+      .col-action, .rowDel{ display:none !important; }
+    }
+
+
+    /* Add-item under table */
+    .addRowWrap{
+      margin-top: 14px;
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+      gap: 10px;
+    }
+    .btnGhost{
+      appearance:none;
+      border:1px dashed rgba(0,0,0,.25);
+      background: transparent;
+      color: var(--ink);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      cursor:pointer;
+    }
+    .btnGhost:hover{ background: rgba(0,0,0,.03); }
+
+    /* Leave white space under the table area */
+    .tableSpacer{ height: 28px; }
+
+    /* ===== Bottom summary ===== */
+    .bottomRow{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap: 18px;
+      margin-top: 18px;
+      align-items:start;
+    }
+
+    .payBox{ padding-top: 6px; }
+    .payBox .blockTitle{ margin-bottom: 8px; }
+
+    .summary{
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .sumLine{
+      display:flex;
+      justify-content:space-between;
+      font-size: 12px;
+      padding: 6px 0;
+      color: var(--muted);
+    }
+    .sumLine b{ color: var(--ink); }
+
+    .totalBox{
+      margin-top: 10px;
+      background: var(--bar);
+      color:#fff;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-weight: 700;
+      letter-spacing:.02em;
+    }
+
+    .note{
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+
+    .thanks{
+      font-style: italic;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .sig{
+      font-size: 12px;
+      color: var(--muted);
+      text-align:right;
+    }
+    .sig b{ color: var(--ink); }
+
+    /* Bottom action area: only ONE button */
+    .actionBar{
+      margin-top: 18px;
+      display:flex;
+      justify-content:flex-end;
+    }
+    .btnPrimary{
+      appearance:none;
+      border:1px solid rgba(0,0,0,.18);
+      background: var(--bar);
+      color:#fff;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      cursor:pointer;
+      letter-spacing:.02em;
+      font-weight: 700;
+      min-width: 190px;
+    }
+    .btnPrimary:hover{ filter: brightness(1.05); }
+
+    /* ===== Print ===== */
+    @page{ size: A4; margin: 12mm; }
+    @media print{
+      body{ background:#fff; }
+
+      /* Client fields in PDF: match Payment Method style */
+      .billRow{ margin: 18px 0 16px !important; }
+      .billRow .kv{
+        display: block !important;
+        line-height: 1.6 !important;
+        color: var(--muted) !important;
+        text-align: left !important;
+        max-width: none !important;
+      }
+      .billRow .floatField{
+        display:block !important;
+        width: auto !important;
+        margin: 0 0 2px 0 !important; /* tight like Payment Method */
+      }
+      .floatLabel{ display:none !important; }
+      .floatInput{
+        padding: 0 !important;
+        margin: 0 !important;
+        color: var(--muted) !important;
+        font-size: 12px !important;
+        font-weight: 400 !important;
+        letter-spacing: 0 !important;
+        text-align: left !important;
+        width: auto !important;
+        min-height: auto !important;
+      }
+      /* hide optional phone if empty */
+      .optionalField[data-empty="true"]{ display:none !important; }
+
+
+.page{ margin:0; padding:0; max-width:none; }
+      .card{ box-shadow:none; border: 1px solid rgba(0,0,0,.10); }
+      .addRowWrap, .actionBar{ display:none !important; }
+      .detailsToggle{ display:none !important; }
+      /* Hide optional details completely if empty */
+      .detailsBox[data-empty="true"]{ display:none !important; }
+      .optionalField[data-empty="true"]{ display:none !important; }
+      /* Make inputs look like text on print */
+      .field, .cellField, .detailsBox textarea{
+        border: none !important;
+        padding: 0 !important;
+        box-shadow:none !important;
+      }
+      .cellField{ background: transparent !important; }
+
+      .moneyWrap{ justify-content:flex-end !important; gap:4px !important; }
+      .moneySym{ color: var(--ink) !important; }
+
+
+/* ===== 顶部安全区：让内容永远不从 Back 底下穿过去 ===== */
+:root{ --safeTop: 64px; }  /* 想更小就改 56px */
+
+.top-safe{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--safeTop);
+  z-index: 9998;
+  background: #fff; /* 发票页背景是白 */
+}
+
+/* 关键：把整个页面内容下移，留出 safeTop 空间 */
+body{
+  padding-top: var(--safeTop);
+}
+
+/* 打印/PDF：不需要安全区 + 隐藏 Back */
+@media print{
+  .top-safe, #backHomeBtn{ display:none !important; }
+  body{ padding-top: 0 !important; }
+}
+    }
+
+
+  </style>
+  </style>
+
+<style id="safeTopFix">
+  :root{ --safeTop: 50px; }
+
+  .top-safe{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--safeTop);
+    z-index: 9998;
+    background: #fff;
+  }
+
+  body{
+    padding-top: var(--safeTop) !important;
+  }
+
+  @media print{
+    .top-safe, #backHomeBtn{ display:none !important; }
+    body{ padding-top: 0 !important; }
+  }
+</style>
+
+</head>
+
+
+
+<body>
+  <div class="top-safe"></div>
+
+  <button
+  id="backHomeBtn"
+  style="
+    position:fixed;
+    top:14px;
+    left:14px;
+    z-index:9999;
+
+    background: rgba(245,245,247,.92);
+    border: 1px solid rgba(0,0,0,.12);
+    color:#1d1d1f;
+
+    border-radius:999px;
+    padding:10px 14px;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  "
+>
+  ← Back
+</button>
+
+
+
+  <div class="page">
+    <div class="card">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="brand">
+          <div class="logo" aria-label="logo"></div>
+          <div class="brandText">
+            <div class="brandName" contenteditable="true">Watsen Gardening</div>
+            <div class="brandMeta">
+              <span contenteditable="true">ABN: 74 882 055 484</span><br/>
+              <span contenteditable="true">Phone: 0404210661</span><br/>
+              <span contenteditable="true">Email: watsenlin@gmail.com</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoiceTitle">
+          <h1>INVOICE</h1>
+          <div class="sub">
+            Invoice ID:&nbsp;<span contenteditable="true" id="invoiceId">#INV-2026-001</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bill To / Contact -->
+      <div class="billRow">
+        <div>
+          <div class="blockTitle">INVOICE TO</div>
+          <div class="kv" style="display:grid; gap:10px; max-width: 420px;">
+            <div class="floatField">
+              <div class="floatLabel">Client Name</div>
+              <input class="field floatInput" id="clientName" type="text" value="" />
+            </div>
+
+            <div class="floatField" id="emailBlock">
+              <div class="floatLabel">Client Email</div>
+              <input class="field floatInput" id="clientEmail" type="email" value="" />
+            </div>
+
+            <div class="floatField optionalField" id="phoneBlock" data-empty="true">
+              <div class="floatLabel">Client Phone (optional)</div>
+              <input class="field floatInput" id="clientPhone" type="tel" value="" />
+            </div>
+
+            <div class="muted" style="font-size:12px;" contenteditable="true">Brisbane, QLD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <table>
+        <thead>
+          <tr>
+            <th class="col-product">PRODUCT</th>
+            <th class="col-price">PRICE</th>
+            <th class="col-qty">QTY</th>
+            <th class="col-total">TOTAL</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        
+        <tbody id="itemsBody">
+          <tr class="item-row">
+            <td class="col-product">
+              <input class="cellField" list="productList" data-role="product" value="" />
+              <datalist id="productList">
+                <option value="Garden Maintenance"></option>
+              </datalist>
+
+              <div class="detailsToggle" data-action="toggleDetails">+ Optional details</div>
+              <div class="detailsBox" data-role="detailsBox" style="display:none;" data-empty="true">
+                <textarea data-role="details" spellcheck="false"></textarea>
+              </div>
+            </td>
+
+            <td class="col-price"><div class="moneyWrap"><span class="moneySym">$</span><input class="cellField num moneyInput" data-role="price" inputmode="decimal" /></div></td>
+
+            <td class="col-qty">
+              <input class="cellField num" data-role="qty" inputmode="numeric" />
+            </td>
+
+            <td class="col-total">
+              $<span class="line-total">0.00</span>
+            </td>
+
+            <td class="col-action">
+              <button class="rowDel" type="button" title="Delete">×</button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <div class="addRowWrap">
+        <button class="btnGhost" type="button" id="addItemBtn">+ Add Item</button>
+        <span class="muted" style="font-size:11px;">(adds a full new row)</span>
+      </div>
+
+      <div class="tableSpacer"></div>
+
+      <!-- Bottom -->
+      <div class="bottomRow">
+        <div class="payBox">
+          <div class="blockTitle">PAYMENT METHOD</div>
+          <div class="kv">
+            <div><b>Name:</b> <span contenteditable="true">LIN HUASEN</span></div>
+            <div><b>BSB:</b> <span contenteditable="true">014-111</span></div>
+            <div><b>Account:</b> <span contenteditable="true">171 173 045</span></div>
+            <div><b>PayID:</b> <span contenteditable="true">0404210661</span></div>
+          </div>
+          <div class="note" contenteditable="true">
+            Please use the invoice number as the payment reference.
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="sumLine">
+            <span>SUB-TOTAL</span>
+            <b>$<span id="subTotal">0.00</span></b>
+          </div>
+          <div class="sumLine">
+            <span>TAX</span>
+            <b contenteditable="true">N/A</b>
+          </div>
+
+          <div class="totalBox">
+            <span>TOTAL</span>
+            <span>$<span id="grandTotal">0.00</span></span>
+          </div>
+
+          <div class="note">
+            GST Not Applicable – Not registered for GST.
+          </div>
+
+          <div class="note" contenteditable="true">
+            Invoice Date: 05 Feb 2026 · Due Date: 08 Feb 2026
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="thanks" contenteditable="true">Thank You For Your Business</div>
+        <div class="sig">
+          <b contenteditable="true">Watsen Lin</b><br/>
+          <span contenteditable="true">The Gap, Brisbane, Australia</span>
+        </div>
+      </div>
+
+      <!-- Only one button at bottom -->
+     <div class="actionBar" style="gap:10px;">
+  <button class="btnPrimary" type="button" id="exportBtn">Export PDF</button>
+  <button class="btnPrimary" type="button" id="emailBtn" style="background:#fff; color:#111;">Email Invoice</button>
+</div>
+
+
+    </div>
+  </div>
+
+<script>
+function money(n){ return (Number.isFinite(n) ? n : 0).toFixed(2); }
+function parseNum(v){
+  const raw = String(v || "").replace(/[^0-9.\-]/g,"").trim();
+  const n = parseFloat(raw);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function recalc(){
+  let sub = 0;
+  document.querySelectorAll(".item-row").forEach(row=>{
+    const priceEl = row.querySelector('[data-role="price"]');
+    const qtyEl = row.querySelector('[data-role="qty"]');
+    const price = parseNum(priceEl?.value);
+    const qty = parseNum(qtyEl?.value);
+    const line = price * qty;
+    row.querySelector(".line-total").textContent = money(line);
+    sub += line;
+
+    // mark details empty/non-empty for print hiding
+    const detailsBox = row.querySelector('[data-role="detailsBox"]');
+    const details = row.querySelector('[data-role="details"]');
+    if(detailsBox && details){
+      const empty = (details.value || "").trim().length === 0;
+      detailsBox.setAttribute("data-empty", empty ? "true" : "false");
+    }
+  });
+
+  document.getElementById("subTotal").textContent = money(sub);
+  document.getElementById("grandTotal").textContent = money(sub);
+
+  // optional phone hide on print
+  const phoneVal = (document.getElementById("clientPhone")?.value || "").trim();
+  const phoneBlock = document.getElementById("phoneBlock");
+  if(phoneBlock) phoneBlock.setAttribute("data-empty", phoneVal ? "false" : "true");
+
+}
+
+function addItem(){
+  const tbody = document.getElementById("itemsBody");
+  const tr = document.createElement("tr");
+  tr.className = "item-row";
+  tr.innerHTML = `
+    <td class="col-product">
+      <input class="cellField" list="productList" data-role="product" value="" />
+      <div class="detailsToggle" data-action="toggleDetails">+ Optional details</div>
+      <div class="detailsBox" data-role="detailsBox" style="display:none;" data-empty="true">
+        <textarea data-role="details" spellcheck="false"></textarea>
+      </div>
+    </td>
+    <td class="col-price"><div class="moneyWrap"><span class="moneySym">$</span><input class="cellField num moneyInput" data-role="price" inputmode="decimal" /></div></td>
+    <td class="col-qty"><input class="cellField num" data-role="qty" inputmode="numeric" /></td>
+    <td class="col-total">$<span class="line-total">0.00</span></td>
+    <td class="col-action"><button class="rowDel" type="button" title="Delete">×</button></td>
+  `;
+  tbody.appendChild(tr);
+  recalc();
+}
+
+function openGmailCompose(){
+  const email = (document.getElementById("clientEmail")?.value || "").trim();
+  const client = (document.getElementById("clientName")?.value || "").trim();
+  const total = (document.getElementById("grandTotal")?.textContent || "").trim();
+
+  if(!email){
+    alert("Please fill Client Email first.");
+    return;
+  }
+
+  const subject = "Invoice – Gardening Service";
+  const body =
+`Hi ${client || ""},
+
+Please find the invoice for the gardening service.
+
+Total: $${total}
+
+If you have any questions, feel free to let me know.
+I’m always happy to help with future maintenance as well.
+
+Kind regards,
+Watsen`;
+
+  const url =
+    "https://mail.google.com/mail/?view=cm&fs=1" +
+    "&to=" + encodeURIComponent(email) +
+    "&su=" + encodeURIComponent(subject) +
+    "&body=" + encodeURIComponent(body);
+
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+
+function saveInvoiceRecord(){
+  const client = (document.getElementById("clientName")?.value || "").trim();
+  const amountText = (document.getElementById("grandTotal")?.textContent || "").trim();
+  const amount = parseFloat(amountText) || 0;
+
+  // 你要的最小记录：时间 / 客户 / 金额
+  // 这里我加一个最基本校验：没填客户名就不记录，避免脏数据
+  if(!client){
+    alert("Please fill Client Name first.");
+    return false;
+  }
+
+  const rec = {
+    id: "invrec_" + Date.now(),
+    time: new Date().toISOString(),
+    client,
+    amount: amount.toFixed(2)
+  };
+
+  const KEY = "invoice_records_v1";
+  const arr = JSON.parse(localStorage.getItem(KEY) || "[]");
+  arr.unshift(rec); // 最新的放最上面
+  localStorage.setItem(KEY, JSON.stringify(arr));
+  return true;
+}
+
+async function exportFlow(){
+  // update details empty flags before print
+  const phoneVal = (document.getElementById("clientPhone")?.value || "").trim();
+  const phoneBlock = document.getElementById("phoneBlock");
+  if(phoneBlock) phoneBlock.setAttribute("data-empty", phoneVal ? "false" : "true");
+  document.querySelectorAll(".item-row").forEach(row=>{
+    const detailsBox = row.querySelector('[data-role="detailsBox"]');
+    const details = row.querySelector('[data-role="details"]');
+    if(detailsBox && details){
+      const empty = (details.value || "").trim().length === 0;
+      detailsBox.setAttribute("data-empty", empty ? "true" : "false");
+    }
+  });
+  const ok = saveInvoiceRecord();
+if(!ok) return;
+
+try { await DriveShared.invoiceRecords.pushFromLocalToDrive(); } catch(e) {}
+
+window.print();
+
+
+}
+
+document.addEventListener("input", (e)=>{
+  if(e.target.matches('[data-role="price"], [data-role="qty"], [data-role="details"], #clientPhone')) recalc();
+});
+
+document.addEventListener("click", (e)=>{
+  const t = e.target;
+  if(t && t.matches('[data-action="toggleDetails"]')){
+    const row = t.closest(".item-row");
+    const box = row.querySelector('[data-role="detailsBox"]');
+    const isHidden = box.style.display === "none";
+    box.style.display = isHidden ? "block" : "none";
+  }
+  // Delete row
+  if(t && t.classList && t.classList.contains("rowDel")){
+    const row = t.closest(".item-row");
+    const tbody = document.getElementById("itemsBody");
+    if(!row || !tbody) return;
+    const rows = tbody.querySelectorAll(".item-row");
+    if(rows.length <= 1){
+      // if only one row, just clear inputs
+      row.querySelectorAll('input[data-role="product"], input[data-role="price"], input[data-role="qty"]').forEach(i=> i.value="");
+      row.querySelectorAll('textarea[data-role="details"]').forEach(i=> i.value="");
+      row.querySelectorAll('[data-role="detailsBox"]').forEach(b=> { b.style.display="none"; b.setAttribute("data-empty","true"); });
+      recalc();
+      return;
+    }
+    row.remove();
+    recalc();
+    return;
+  }
+
+});
+
+document.getElementById("addItemBtn").addEventListener("click", addItem);
+document.getElementById("exportBtn").addEventListener("click", exportFlow);
+document.getElementById("emailBtn").addEventListener("click", openGmailCompose);
+
+// Always start as NEW on open: clear client fields and item inputs
+window.addEventListener("DOMContentLoaded", ()=>{
+
+  // Auto Invoice ID (Scheme A: timestamp). Generates a fresh ID each time the page opens.
+  const invEl = document.getElementById("invoiceId");
+  if(invEl){
+    const d = new Date();
+    const pad = (n)=> String(n).padStart(2,"0");
+    const id = `INV-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    invEl.textContent = "#" + id;
+  }
+
+  document.getElementById("clientName").value = "";
+  document.getElementById("clientEmail").value = "";
+  const phoneEl = document.getElementById("clientPhone");
+  if(phoneEl) phoneEl.value = "";
+  document.querySelectorAll('[data-role="product"]').forEach(i=> i.value="");
+  document.querySelectorAll('[data-role="price"]').forEach(i=> i.value="");
+  document.querySelectorAll('[data-role="qty"]').forEach(i=> i.value="");
+  document.querySelectorAll('[data-role="details"]').forEach(i=> i.value="");
+  document.querySelectorAll('[data-role="detailsBox"]').forEach(b=> b.setAttribute("data-empty","true"));
+  recalc();
+ 
+    // ===== 返回主页按钮逻辑 =====
+  document.getElementById("backHomeBtn")?.addEventListener("click", () => {
+    // 如果是从主页新开窗口，直接关闭
+    if (window.opener) {
+      window.close();
+      return;
+    }
+
+    // 否则走浏览器返回
+    if (history.length > 1) {
+      history.back();
+      return;
+    }
+
+    // 兜底：强制回主页
+    window.location.href = "./index.html";
+  });
+
+}); // ✅ 这一行是关闭 DOMContentLoaded 的，必须要有
+
+
+
+</script>
+<script src="./driveShared.js"></script>
+</body>
+</html>

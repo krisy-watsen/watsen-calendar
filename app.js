@@ -35,7 +35,36 @@ function setCloudStatus(text, ok = true) {
   if (!el) return;
   el.textContent = text;
   el.style.color = ok ? '#6b7280' : '#ef4444';
+  mapCloudDotFromText(text);
+
 }
+
+function mapCloudDotFromText(text){
+  const dot = document.getElementById('cloudStatus');
+  if(!dot) return;
+
+  const t = String(text || '');
+
+  // 默认黄
+  let cls = 'dot-yellow';
+
+  // 红：失败/异常/未授权
+  if (/失败|error|初始化失败|未授权|invalid|denied|断开|未登录|请登录/i.test(t)) {
+    cls = 'dot-red';
+  }
+
+  // 绿：明确在线/已连接/已同步
+  if (/已连接|在线|已同步|同步完成|已授权|connected|ready/i.test(t)) {
+    cls = 'dot-green';
+  }
+
+  dot.classList.remove('dot-red','dot-yellow','dot-green');
+  dot.classList.add(cls);
+
+  // 让鼠标悬停还能看到原文字（不占UI）
+  dot.title = t;
+}
+
 
 async function driveFetch(url, options = {}) {
   if (!gAccessToken) throw new Error('Not signed in');

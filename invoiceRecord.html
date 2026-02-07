@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice Record</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body{
+      margin:0;
+      background:#f5f5f5;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      color:#111;
+    }
+    .wrap{
+      max-width:900px;
+      margin:24px auto;
+      padding:16px;
+    }
+    .card{
+      background:#fff;
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+    }
+    h1{
+      font-size:16px;
+      margin:0 0 12px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+    th,td{
+      padding:10px 8px;
+      border-bottom:1px solid rgba(0,0,0,.1);
+      text-align:left;
+    }
+    th{
+      color:#666;
+      font-weight:600;
+      font-size:12px;
+    }
+    .btn{
+      padding:6px 10px;
+      border-radius:8px;
+      border:1px solid rgba(0,0,0,.2);
+      background:#fff;
+      cursor:pointer;
+      font-size:12px;
+    }
+    .btn-danger{
+      border-color:#e11d48;
+      color:#e11d48;
+    }
+    .btn-cancel{
+      border-color:rgba(0,0,0,.2);
+      color:#111;
+      margin-left:8px;
+      display:none;
+    }
+    .empty{
+      color:#777;
+      font-size:13px;
+      padding:12px 0;
+      }
+
+
+/* ===== Record 页：顶部安全区（和 invoice 一样） ===== */
+:root{
+  --safeTop: 50px;   /* 和 invoice 保持一致 */
+}
+
+.top-safe{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--safeTop);
+  background: #fff;
+  z-index: 9998;
+}
+
+/* 关键：整个页面内容下移，永远不被 Back 压住 */
+body{
+  padding-top: var(--safeTop);
+}
+
+/* Record 的白色卡片，轻微下沉一点 */
+.card{
+  margin-top: 14px;
+}
+
+
+
+  </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+</head>
+
+<body>
+    <div class="top-safe"></div>
+    <button
+  id="backHomeBtn"
+  onclick="location.href='index.html'"
+  style="
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 9999;
+
+    background: rgba(245,245,247,.92);
+    border: 1px solid rgba(0,0,0,.12);
+    color:#1d1d1f;
+
+    border-radius:999px;
+    padding:10px 14px;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  "
+>
+  ← Back
+</button>
+<button id="driveLoginBtn"
+  style="
+    position: fixed;
+    top: 14px;
+    left: 92px;
+    z-index: 9999;
+    background: rgba(245,245,247,.92);
+    border: 1px solid rgba(0,0,0,.12);
+    color:#1d1d1f;
+    border-radius:999px;
+    padding:10px 12px;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  "
+>☁︎</button>
+
+<span id="driveDot"
+  style="
+    position: fixed;
+    top: 18px;
+    left: 132px;
+    z-index: 10000;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #ef4444; /* red default */
+  "
+></span>
+
+
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Invoice Record</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:180px;">Date</th>
+            <th>Client</th>
+            <th style="width:120px;">Amount</th>
+            <th style="width:200px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="recordBody"></tbody>
+      </table>
+
+      <div id="emptyState" class="empty" style="display:none;">
+        No record yet
+      </div>
+    </div>
+  </div>
+<script src="./driveShared.js"></script>
+<script>
+  const KEY = "invoice_records_v1";
+  const DRIVE_FILE = "invoice_records.json";
+
+// 合并（不覆盖）：remote + local 去重后返回
+function mergeRecords(localArr, remoteArr){
+  const map = new Map();
+  const put = (r)=>{
+    if(!r) return;
+    const key = `${r.time||""}|${r.client||""}|${String(r.amount||"")}`;
+    if(!map.has(key)) map.set(key, r);
+  };
+  (Array.isArray(remoteArr)?remoteArr:[]).forEach(put);
+  (Array.isArray(localArr)?localArr:[]).forEach(put);
+  return Array.from(map.values()).sort((a,b)=> Date.parse(b.time) - Date.parse(a.time));
+}
+
+async function pullMergeFromDriveToLocal(){
+  const remote = await DriveShared.readJson(DRIVE_FILE);
+  if(!Array.isArray(remote)) return false;
+
+  const local = loadRecords();
+  const merged = mergeRecords(local, remote);
+  localStorage.setItem(KEY, JSON.stringify(merged));
+  return true;
+}
+
+async function pushLocalToDrive(){
+  const local = loadRecords();
+  await DriveShared.writeJson(DRIVE_FILE, local);
+  return true;
+}
+
+
+async function pushFromLocalToDrive(){
+  const local = loadRecords();
+  await DriveShared.writeJson(DRIVE_FILE, local);
+  return true;
+}
+
+
+  function loadRecords(){
+    return JSON.parse(localStorage.getItem(KEY) || "[]");
+  }
+
+  function saveRecords(arr){
+    localStorage.setItem(KEY, JSON.stringify(arr));
+  }
+
+  // 让页面上“只有一行”处于确认态，避免误删
+  function resetAllConfirmStates(){
+    document.querySelectorAll('button[data-role="del"]').forEach(btn=>{
+      btn.dataset.state = "idle";
+      btn.textContent = "Delete";
+      btn.style.background = "#fff";
+      btn.style.color = "#e11d48";
+      btn.style.borderColor = "#e11d48";
+    });
+    document.querySelectorAll('button[data-role="cancel"]').forEach(btn=>{
+      btn.style.display = "none";
+    });
+  }
+
+  function render(){
+    const tbody = document.getElementById("recordBody");
+    const empty = document.getElementById("emptyState");
+    let records = loadRecords();
+     records.sort((a,b)=> Date.parse(b.time) - Date.parse(a.time));
+  // ✅ 最新在前
+
+
+    tbody.innerHTML = "";
+
+    if(records.length === 0){
+      empty.style.display = "block";
+      return;
+    }
+
+    empty.style.display = "none";
+
+    records.forEach((r, idx)=>{
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${new Date(r.time).toLocaleString()}</td>
+        <td>${r.client}</td>
+        <td>$${r.amount}</td>
+        <td>
+          <button class="btn btn-danger" data-role="del" data-i="${idx}" data-state="idle">Delete</button>
+          <button class="btn btn-cancel" data-role="cancel" data-i="${idx}">Cancel</button>
+        </td>
+      `;
+
+      const delBtn = tr.querySelector('button[data-role="del"]');
+      const cancelBtn = tr.querySelector('button[data-role="cancel"]');
+
+      // 第一次点：进入确认态；第二次点：真正删除
+      delBtn.onclick = async() => {
+        const i = parseInt(delBtn.dataset.i, 10);
+
+        if(delBtn.dataset.state === "idle"){
+          // 先把其他行的确认态清掉，避免同时确认多行
+          resetAllConfirmStates();
+
+          delBtn.dataset.state = "confirm";
+          delBtn.textContent = "Confirm Delete";
+          delBtn.style.background = "#fee2e2";
+          delBtn.style.color = "#b91c1c";
+          delBtn.style.borderColor = "#ef4444";
+          cancelBtn.style.display = "inline-block";
+          return;
+        }
+
+        // 第二次点：删除
+        const arr = loadRecords();
+        const delIndex = arr.findIndex(x =>
+        x.time === r.time && x.client === r.client && String(x.amount) === String(r.amount)
+);
+if(delIndex === -1) return;
+
+arr.splice(delIndex, 1);
+saveRecords(arr);
+render();
+try { await pushLocalToDrive(); } catch(e) { console.warn(e); }
+
+
+      };
+
+      // 取消：回到 idle
+      cancelBtn.onclick = () => {
+        resetAllConfirmStates();
+      };
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 点击页面空白处，也自动退出确认态（防止你忘了）
+  document.addEventListener("click", (e)=>{
+    const t = e.target;
+    const insideAction = t && (t.closest && t.closest("#recordBody"));
+    const isDelOrCancel = t && t.dataset && (t.dataset.role === "del" || t.dataset.role === "cancel");
+    if(insideAction && isDelOrCancel) return;
+    resetAllConfirmStates();
+  });
+
+  async function syncPullThenRenderThenPush(){
+  // ✅ 永远先渲染本地（不会出现“开票后本地没记录”）
+  render();
+
+  // 没有 token 就不要乱 pull/push（避免覆盖/报错/没反应）
+  try{
+    await DriveShared.ensureAccessToken(false);
+  }catch(e){
+    // 还没授权：保持本地可用，等待你点云朵
+    return;
+  }
+
+  // 有 token：合并云端 → 重新渲染 → 推回云端
+  try{
+    await pullMergeFromDriveToLocal();
+    render();
+  }catch(e){
+    console.warn("Drive merge pull failed:", e);
+  }
+
+  try{
+    await pushLocalToDrive();
+  }catch(e){
+    console.warn("Drive push failed:", e);
+  }
+}
+
+
+function setDriveDot(color){
+  const dot = document.getElementById("driveDot");
+  if(!dot) return;
+  dot.style.background = (color==="green") ? "#22c55e" : (color==="yellow") ? "#f59e0b" : "#ef4444";
+}
+
+window.addEventListener("DOMContentLoaded", async ()=>{
+  setDriveDot("yellow");
+
+  let hasToken = false;
+
+  try{
+    // 👈 关键：只做“检查”，不强求
+    await DriveShared.ensureAccessToken(false);
+    hasToken = true;
+    setDriveDot("green");
+  }catch(e){
+    // 没授权，不自动同步
+    setDriveDot("red");
+  }
+
+  // ✅ 永远先显示本地（最安全）
+  render();
+
+  // ✅ 只有“已授权”才自动同步
+  if(hasToken){
+    await syncPullThenRenderThenPush();
+  }
+});
+
+
+ document.getElementById("driveLoginBtn").onclick = async ()=>{
+  try{
+    setDriveDot("yellow");
+    await DriveShared.ensureAccessToken(true);   // interactive
+    setDriveDot("green");
+    await syncPullThenRenderThenPush();          // 授权后立刻：合并+推送
+    alert("Drive 已连接并同步完成");
+  }catch(e){
+    console.warn(e);
+    setDriveDot("red");
+    alert("Drive 连接失败：" + (e?.message || e));
+  }
+};
+
+
+</script>
+
+
+
+</body>
+</html>
+
