@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
   <title>Invoice</title>
   <style>
     :root{
@@ -411,31 +412,9 @@
       .moneySym{ color: var(--ink) !important; }
 
 
-/* ===== 顶部安全区：让内容永远不从 Back 底下穿过去 ===== */
-:root{ --safeTop: 64px; }  /* 想更小就改 56px */
-
-.top-safe{
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--safeTop);
-  z-index: 9998;
-  background: #fff; /* 发票页背景是白 */
-}
-
-/* 关键：把整个页面内容下移，留出 safeTop 空间 */
-body{
-  padding-top: var(--safeTop);
-}
-
-/* 打印/PDF：不需要安全区 + 隐藏 Back */
-@media print{
-  .top-safe, #backHomeBtn{ display:none !important; }
-  body{ padding-top: 0 !important; }
-}
     }
 
 
-  </style>
   </style>
 
 <style id="safeTopFix">
@@ -450,13 +429,241 @@ body{
   }
 
   body{
-    padding-top: var(--safeTop) !important;
+    padding-top: var(--safeTop);
   }
 
   @media print{
-    .top-safe, #backHomeBtn{ display:none !important; }
-    body{ padding-top: 0 !important; }
+  .top-safe, #backHomeBtn{ display:none !important; }
+  body{ padding-top: 0 !important; }
+
+  /* 关键：强制打印保留深色背景 */
+  *{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
+
+  thead th{
+    background: var(--bar) !important;
+    color:#fff !important;
+  }
+
+  .totalBox{
+    background: var(--bar) !important;
+    color:#fff !important;
+  }
+}
+
+  
+
+/* Mobile: keep same layout, just scale + spacing to look like a clean invoice */
+@media (max-width: 480px){
+  .page{ padding: 10px; }
+  .card{ padding: 16px; border-radius: 16px; }
+
+  /* 字体更清晰，间距更像“发票展示” */
+  body{ font-size: 15px; }
+  .muted{ font-size: 13px; }
+  .invoiceTitle h1{ font-size: 16px; letter-spacing: .28em; }
+
+  /* 输入框更像你截图：高度、圆角、内边距 */
+  input, textarea{
+    font-size: 15px;
+    padding: 12px 12px;
+    border-radius: 14px;
+  }
+
+  /* 表格不做横滑，不改结构：只是收紧列宽 + 字号 */
+  th{ font-size: 13px; }
+  td{ font-size: 14px; }
+  .col-price, .col-qty, .col-total{ width: 90px; }
+  .col-product{ width: auto; }
+
+  /* 底部 summary 稍微收紧，避免“挤乱” */
+   .bottomRow{
+    grid-template-columns: 1fr;   /* 关键：手机变成一列，不再挤爆 */
+    gap: 14px;
+  }
+  .payBox, .summary{ width: 100%; }
+
+    /* === 关键：禁止横向溢出（解决左边被切、右边灰条） === */
+  html, body { overflow-x: hidden; }
+  .page{ width:100%; max-width:100%; margin:0; padding:10px; }
+  .card{ width:100%; max-width:100%; overflow:hidden; }
+
+  /* === 关键：表格用固定布局，强制所有列在手机宽度内 === */
+  table{ width:100%; table-layout: fixed; }
+  thead th, tbody td{ padding: 10px 8px; }   /* 手机更紧凑 */
+
+  /* 列宽重新分配：让 TOTAL 不把整张表撑爆 */
+  .col-action{ width: 40px; }
+  .col-price, .col-qty, .col-total{ width: 72px; } /* 你可以再小到 64px */
+  .col-product{ width: auto; }  /* 剩余宽度都给 PRODUCT */
+
+  /* PRODUCT 允许换行，不要撑宽整表 */
+  .cellField{ max-width:100%; }
+/* === Fix top-right INVOICE block overflow on mobile === */
+@media (max-width: 480px){
+  .header{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .brand{ min-width: 0; }              /* 允许缩小，不要撑宽 */
+  .invoiceTitle{
+    text-align: left;                  /* 右侧改左对齐更稳 */
+    width: 100%;
+  }
+
+  .invoiceTitle h1{
+    word-break: break-word;
+  }
+
+  .invoiceTitle .sub{
+    width: 100%;
+    white-space: normal;               /* 允许换行 */
+    overflow-wrap: anywhere;           /* 长ID也能断行 */
+  }
+}
+/* === Mobile: keep PAYMENT METHOD fully readable === */
+@media (max-width: 480px){
+
+  /* 确保 bottom 区域在手机是单列，不挤 */
+  .bottomRow{
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* PAYMENT METHOD 本体：一定要吃满宽度 */
+  .payBox{
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 标题正常显示 */
+  .payBox .blockTitle{
+    white-space: normal;
+  }
+
+  /* 关键信息每一行：允许自然换行，不压缩 */
+  .payBox .kv{
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;        /* 不强制单行 */
+    word-break: normal;         /* 不拆单词 */
+    overflow-wrap: break-word;  /* 只有真的太长才断 */
+    line-height: 1.6;
+  }
+
+  /* Name / BSB / Account / PayID 这一类 <b> + 文本组合 */
+  .payBox .kv b{
+    white-space: nowrap;        /* 标签本身不拆 */
+  }
+}
+@media (max-width: 480px){
+
+  /* 让底部区域用 flex，才能用 order 改顺序 */
+  .bottomRow{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* ③ 先显示 summary（SUB-TOTAL/TAX/TOTAL） */
+  .summary{
+    order: 1;
+    width: 100%;
+  }
+
+  /* ② 再显示 payment method */
+  .payBox{
+    order: 2;
+    width: 100%;
+  }
+}
+@media (max-width: 480px){
+
+  /* Header 整体：更紧凑、更有层级 */
+  .header{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  /* 品牌块：做成一块干净的小信息区 */
+  .brand{
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+  }
+
+  .logo{
+    width: 30px;
+    height: 30px;
+  }
+
+  .brandName{
+    font-size: 15px;
+    letter-spacing: .1px;
+  }
+
+  .brandMeta{
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  /* INVOICE 标题：不占太多高度，但保持“高级感” */
+  .invoiceTitle{
+    width: 100%;
+    text-align: left;
+  }
+
+  .invoiceTitle h1{
+    font-size: 18px;
+    letter-spacing: .34em;
+    margin: 0;
+    line-height: 1.05;
+  }
+
+  /* Invoice ID：更像副标题，自动换行但不乱 */
+  .invoiceTitle .sub{
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--muted);
+    overflow-wrap: anywhere; /* 长 ID 也能断行 */
+    word-break: normal;
+  }
+}
+@media (max-width: 480px){
+
+  /* 让表格区域整体缩小一点（不影响其他模块） */
+  table{
+    transform: scale(0.92);
+    transform-origin: top left;
+    width: calc(100% / 0.92); /* 抵消缩放后变窄，确保仍铺满可视区域 */
+  }
+
+  /* 同步缩放表格下面的 Add Item 区域（看起来是一体的） */
+  .addRowWrap{
+    transform: scale(0.92);
+    transform-origin: top left;
+    width: calc(100% / 0.92);
+  }
+
+  /* 输入框内容：保证可见，不被省略 */
+  .cellField{
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;  /* 数字/短文本更清楚 */
+  }
+}
+
+}
+
 </style>
 
 </head>
@@ -629,9 +836,10 @@ body{
             GST Not Applicable – Not registered for GST.
           </div>
 
-          <div class="note" contenteditable="true">
-            Invoice Date: 05 Feb 2026 · Due Date: 08 Feb 2026
-          </div>
+          <div class="note">
+          Invoice Date: <span id="invoiceDateText"></span> · Due Date: <span id="dueDateText"></span>
+         </div>
+
         </div>
       </div>
 
@@ -844,6 +1052,24 @@ window.addEventListener("DOMContentLoaded", ()=>{
     const id = `INV-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
     invEl.textContent = "#" + id;
   }
+  // ===== Auto Invoice Date (today) & Due Date (+7 days) =====
+  const formatDate = (date)=>{
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dd = String(date.getDate()).padStart(2,"0");
+    const mm = months[date.getMonth()];
+    const yy = date.getFullYear();
+    return `${dd} ${mm} ${yy}`;
+  };
+
+  const today = new Date();
+  const dueDate = new Date(today);
+  dueDate.setDate(dueDate.getDate() + 7);
+
+  const invoiceDateEl = document.getElementById("invoiceDateText");
+  const dueDateEl = document.getElementById("dueDateText");
+
+  if(invoiceDateEl) invoiceDateEl.textContent = formatDate(today);
+  if(dueDateEl) dueDateEl.textContent = formatDate(dueDate);
 
   document.getElementById("clientName").value = "";
   document.getElementById("clientEmail").value = "";
