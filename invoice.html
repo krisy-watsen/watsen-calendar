@@ -792,6 +792,7 @@ function openGmailCompose(){
   const email = (document.getElementById("clientEmail")?.value || "").trim();
   const client = (document.getElementById("clientName")?.value || "").trim();
   const total = (document.getElementById("grandTotal")?.textContent || "").trim();
+  const invId = (document.getElementById("invoiceId")?.textContent || "").trim();
 
   if(!email){
     alert("Please fill Client Email first.");
@@ -804,6 +805,7 @@ function openGmailCompose(){
 
 Please find the invoice for the gardening service.
 
+Invoice: ${invId || ""}
 Total: $${total}
 
 If you have any questions, feel free to let me know.
@@ -812,6 +814,21 @@ I’m always happy to help with future maintenance as well.
 Kind regards,
 Watsen`;
 
+  // ✅ 手机：用 mailto 触发系统邮件 App（更可能打开 Gmail App/或让你选择）
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if(isMobile){
+    const mailto =
+      "mailto:" + encodeURIComponent(email) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+
+    // 手机上用 location.href 比 window.open 稳
+    window.location.href = mailto;
+    return;
+  }
+
+  // ✅ 桌面：保留你现在“网页 Gmail 自动填充”的方式（不动）
   const url =
     "https://mail.google.com/mail/?view=cm&fs=1" +
     "&to=" + encodeURIComponent(email) +
@@ -820,6 +837,7 @@ Watsen`;
 
   window.open(url, "_blank", "noopener,noreferrer");
 }
+
 
 
 function saveInvoiceRecord(){
