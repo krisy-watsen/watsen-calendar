@@ -201,17 +201,27 @@ body{
   const DRIVE_FILE = "invoice_records.json";
 
 // 合并（不覆盖）：remote + local 去重后返回
+// 合并：以 id 为主键；updatedAt 谁新用谁；支持 deleted 同步
 function mergeRecords(localArr, remoteArr){
   const map = new Map();
+
   const put = (r)=>{
-    if(!r) return;
-    const key = `${r.time||""}|${r.client||""}|${String(r.amount||"")}`;
-    if(!map.has(key)) map.set(key, r);
+    if(!r || !r.id) return;
+    const prev = map.get(r.id);
+    const ru = Number(r.updatedAt || 0);
+    const pu = Number(prev?.updatedAt || 0);
+
+    if(!prev || ru >= pu){
+      map.set(r.id, r);
+    }
   };
-  (Array.isArray(remoteArr)?remoteArr:[]).forEach(put);
-  (Array.isArray(localArr)?localArr:[]).forEach(put);
+
+  (Array.isArray(remoteArr) ? remoteArr : []).forEach(put);
+  (Array.isArray(localArr) ? localArr : []).forEach(put);
+
   return Array.from(map.values()).sort((a,b)=> Date.parse(b.time) - Date.parse(a.time));
 }
+
 
 async function pullMergeFromDriveToLocal(){
   const remote = await DriveShared.readJson(DRIVE_FILE);
@@ -235,11 +245,46 @@ async function pushFromLocalToDrive(){
   await DriveShared.writeJson(DRIVE_FILE, local);
   return true;
 }
+function normalizeRecord(r){
+  if(!r || typeof r !== "object") return null;
+
+  const timeStr = r.time || new Date().toISOString();
+  const client = String(r.client || "").trim();
+  const amount = String(r.amount ?? "").trim();
+
+  // 旧数据如果没有 id：生成一个“稳定的 legacy id”
+  if(!r.id){
+    const t = Date.parse(timeStr) || Date.now();
+    const safeClient = client.replace(/\s+/g,"_").slice(0,40);
+    r.id = `legacy_${t}_${safeClient}_${amount}`;
+  }
+
+  // 软删除标记
+  if(typeof r.deleted !== "boolean") r.deleted = false;
+
+  // 更新时间：没有就取 time 的时间戳（或现在）
+  if(!r.updatedAt){
+    r.updatedAt = Date.parse(timeStr) || Date.now();
+  }
+
+  // time 保证存在
+  r.time = timeStr;
+
+  return r;
+}
 
 
   function loadRecords(){
-    return JSON.parse(localStorage.getItem(KEY) || "[]");
-  }
+  const raw = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const arr = (Array.isArray(raw) ? raw : [])
+    .map(normalizeRecord)
+    .filter(Boolean);
+
+  // 把补齐后的结构写回本地，确保以后一致
+  localStorage.setItem(KEY, JSON.stringify(arr));
+  return arr;
+}
+
 
   function saveRecords(arr){
     localStorage.setItem(KEY, JSON.stringify(arr));
@@ -262,9 +307,9 @@ async function pushFromLocalToDrive(){
   function render(){
     const tbody = document.getElementById("recordBody");
     const empty = document.getElementById("emptyState");
-    let records = loadRecords();
-     records.sort((a,b)=> Date.parse(b.time) - Date.parse(a.time));
-  // ✅ 最新在前
+    let records = loadRecords().filter(r => !r.deleted);
+    records.sort((a,b)=> Date.parse(b.time) - Date.parse(a.time));
+
 
 
     tbody.innerHTML = "";
@@ -310,17 +355,17 @@ async function pushFromLocalToDrive(){
         }
 
         // 第二次点：删除
-        const arr = loadRecords();
-        const delIndex = arr.findIndex(x =>
-        x.time === r.time && x.client === r.client && String(x.amount) === String(r.amount)
-);
+       const arr = loadRecords();
+const delIndex = arr.findIndex(x => x.id === r.id);
 if(delIndex === -1) return;
 
-arr.splice(delIndex, 1);
+// ✅ 软删除：让“删除”也能同步到 Drive
+arr[delIndex].deleted = true;
+arr[delIndex].updatedAt = Date.now();
+
 saveRecords(arr);
 render();
 try { await pushLocalToDrive(); } catch(e) { console.warn(e); }
-
 
       };
 
