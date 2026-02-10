@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "krisy-app-v100";
+const CACHE_NAME = "krisy-app-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -9,8 +9,8 @@ const APP_SHELL = [
   "./app.js",
   "./driveShared.js",
   "./manifest.webmanifest",
-  "./icons/krisy-icon-180.png",
-  "./icons/krisy-icon-512.png"
+  "./krisy-icon-180.png",
+  "./krisy-icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
