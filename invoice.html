@@ -811,45 +811,47 @@ function openGmailCompose(){
     return;
   }
 
-  const subject = "Invoice – Gardening Service";
-  const body =
-`Hi ${client || ""},
+  const subjectDesktop = "Invoice – Gardening Service";
+  const subjectMobile = "Invoice - Gardening Service"; // ✅ 手机更稳
+  const cleanTotal = total.replace(/^\$/,'');
 
-Please find the invoice for the gardening service.
+  const lines = [
+    `Hi ${client || ""},`,
+    " ",
+    "Please find the invoice for the gardening service.",
+    " ",
+    `Invoice: ${invId || ""}`,
+    `Total: $${cleanTotal}`,
+    " ",
+    "If you have any questions, feel free to let me know.",
+    "I’m always happy to help with future maintenance as well.",
+    " ",
+    "Kind regards,",
+    "Watsen"
+  ];
 
-Invoice: ${invId || ""}
-Total: $${total}
+  const body = lines.join("\r\n");
 
-If you have any questions, feel free to let me know.
-I’m always happy to help with future maintenance as well.
-
-Kind regards,
-Watsen`;
-
-  // ✅ 手机：用 mailto 触发系统邮件 App（更可能打开 Gmail App/或让你选择）
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   if(isMobile){
     const mailto =
       "mailto:" + encodeURIComponent(email) +
-      "?subject=" + encodeURIComponent(subject) +
+      "?subject=" + encodeURIComponent(subjectMobile) +
       "&body=" + encodeURIComponent(body);
 
-    // 手机上用 location.href 比 window.open 稳
     window.location.href = mailto;
     return;
   }
 
-  // ✅ 桌面：保留你现在“网页 Gmail 自动填充”的方式（不动）
   const url =
     "https://mail.google.com/mail/?view=cm&fs=1" +
     "&to=" + encodeURIComponent(email) +
-    "&su=" + encodeURIComponent(subject) +
+    "&su=" + encodeURIComponent(subjectDesktop) +
     "&body=" + encodeURIComponent(body);
 
   window.open(url, "_blank", "noopener,noreferrer");
 }
-
 
 
 function saveInvoiceRecord(){
@@ -911,7 +913,16 @@ try{
   console.warn("Push invoice records to Drive failed:", e);
 }
 
-window.print();
+// ✅ iPhone 打印：先取消焦点 + 滚回顶部，再调用 print
+try { document.activeElement && document.activeElement.blur && document.activeElement.blur(); } catch(e) {}
+
+window.scrollTo(0, 0);
+
+// iOS 需要给一点时间让滚动/布局稳定
+setTimeout(() => {
+  window.print();
+}, 300);
+
 
 
 }
