@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "krisy-app-v2";
+const CACHE_NAME = "krisy-app-v100";
 const APP_SHELL = [
   "./",
   "./index.html",
