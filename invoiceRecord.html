@@ -223,24 +223,36 @@ function mergeRecords(localArr, remoteArr){
 }
 
 
+
+function extractArray(maybe){
+  // 兼容：数组 / {records:[]} / {data:[]} / {items:[]} / null
+  if(Array.isArray(maybe)) return maybe;
+  if(maybe && typeof maybe === "object"){
+    if(Array.isArray(maybe.records)) return maybe.records;
+    if(Array.isArray(maybe.data)) return maybe.data;
+    if(Array.isArray(maybe.items)) return maybe.items;
+  }
+  return null; // 表示“云端没有可用数组”
+}
+
 async function pullMergeFromDriveToLocal(){
-  const remote = await DriveShared.readJson(DRIVE_FILE);
-  if(!Array.isArray(remote)) return false;
+  const remoteRaw = await DriveShared.readJson(DRIVE_FILE);
+  const remoteArr = extractArray(remoteRaw);
 
   const local = loadRecords();
-  const merged = mergeRecords(local, remote);
+
+  // 云端还没有文件/没有数组：不做 merge，交给上层决定是否初始化 push
+  if(!remoteArr){
+    return { ok:false, reason:"no-remote-array", remoteRaw };
+  }
+
+  const merged = mergeRecords(local, remoteArr);
   localStorage.setItem(KEY, JSON.stringify(merged));
-  return true;
+  return { ok:true, mergedCount: merged.length };
 }
+
 
 async function pushLocalToDrive(){
-  const local = loadRecords();
-  await DriveShared.writeJson(DRIVE_FILE, local);
-  return true;
-}
-
-
-async function pushFromLocalToDrive(){
   const local = loadRecords();
   await DriveShared.writeJson(DRIVE_FILE, local);
   return true;
@@ -388,31 +400,59 @@ try { await pushLocalToDrive(); } catch(e) { console.warn(e); }
   });
 
   async function syncPullThenRenderThenPush(){
-  // ✅ 永远先渲染本地（不会出现“开票后本地没记录”）
+  // 先显示本地（用户体验）
   render();
 
-  // 没有 token 就不要乱 pull/push（避免覆盖/报错/没反应）
+  // 自动拿 token：有缓存就用；能 silent 就 silent；拿不到就保持本地并显示黄点
+let tok = null;
+try{
+  // 新 driveShared.js 里要有 ensureAccessTokenAuto()
+  tok = await DriveShared.ensureAccessTokenAuto();
+}catch(e){
+  tok = null;
+}
+
+if(!tok){
+  setDriveDot("yellow"); // 不是错误，只是“暂时没拿到云端 token”
+  console.warn("No token (auto), skip sync for now");
+  return;
+}
+
+
+  setDriveDot("yellow");
+
+  // 1) pull + merge
+  let pulled = false;
   try{
-    await DriveShared.ensureAccessToken(false);
+    const res = await pullMergeFromDriveToLocal();
+
+    if(res.ok){
+      pulled = true;
+      render(); // 显示合并后的结果
+    }else{
+      // 云端没有文件/结构不是数组：用本地初始化云端（这一步非常关键）
+      await pushLocalToDrive();
+      pulled = true;
+    }
   }catch(e){
-    // 还没授权：保持本地可用，等待你点云朵
-    return;
+    console.warn("Drive pull/merge failed:", e);
   }
 
-  // 有 token：合并云端 → 重新渲染 → 推回云端
-  try{
-    await pullMergeFromDriveToLocal();
-    render();
-  }catch(e){
-    console.warn("Drive merge pull failed:", e);
-  }
-
+  // 2) push（把最终一致结果写回云端）
   try{
     await pushLocalToDrive();
+    setDriveDot("green");
   }catch(e){
     console.warn("Drive push failed:", e);
+    setDriveDot("red");
+  }
+
+  if(!pulled){
+    // pull 都没成功，标红更直观
+    setDriveDot("red");
   }
 }
+
 
 
 function setDriveDot(color){
@@ -422,25 +462,13 @@ function setDriveDot(color){
 }
 
 window.addEventListener("DOMContentLoaded", async ()=>{
-  setDriveDot("yellow");
+  setDriveDot("yellow"); // 初始不要用 red 吓自己
+  render();              // 先本地秒开
+  await syncPullThenRenderThenPush(); // 再自动尝试云端同步（内部已改为 auto token）
+});
 
-  let hasToken = false;
-
-  try{
-    // 👈 关键：只做“检查”，不强求
-    await DriveShared.ensureAccessToken(false);
-    hasToken = true;
-    setDriveDot("green");
-  }catch(e){
-    // 没授权，不自动同步
-    setDriveDot("red");
-  }
-
-  // ✅ 永远先显示本地（最安全）
-  render();
-
-  // ✅ 只有“已授权”才自动同步
-  if(hasToken){
+document.addEventListener("visibilitychange", async ()=>{
+  if(!document.hidden){
     await syncPullThenRenderThenPush();
   }
 });

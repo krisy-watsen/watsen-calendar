@@ -938,37 +938,63 @@ function initCalendar() {
       const ext = arg.event.extendedProps || {};
 
       if (ext.type === 'Work') {
-        const t = formatTimeLower(arg.event.start);
-        const clientName = ext.clientId
-          ? clients.find((c) => c.clientId === ext.clientId)?.name || ext.clientId
-          : 'Work';
-        const unpaid = isWorkUnpaid(ext);
+  const t = formatTimeLower(arg.event.start);
 
-        const wrap = document.createElement('div');
-        wrap.style.lineHeight = '1.1';
-        const line1 = document.createElement('div');
-        line1.textContent = `${t} ${clientName}`;
-        wrap.appendChild(line1);
+  const clientName = ext.clientId
+    ? clients.find((c) => c.clientId === ext.clientId)?.name || ext.clientId
+    : 'Work';
 
-        if (unpaid) {
-          const line2 = document.createElement('div');
-          line2.textContent = '未收款';
-          line2.style.opacity = '0.9';
-          wrap.appendChild(line2);
-        }
-        return { domNodes: [wrap] };
-      }
+  const unpaid = isWorkUnpaid(ext);
+
+  const wrap = document.createElement('div');
+  wrap.style.lineHeight = '1.1';
+
+  // 第1行：时间（用 FullCalendar 的 class，CSS更稳）
+  const l1 = document.createElement('div');
+  l1.className = 'fc-event-time';
+  l1.textContent = t || '';
+  wrap.appendChild(l1);
+
+  // 第2行：客户名（关键：client-name）
+  const l2 = document.createElement('span');
+  l2.className = 'client-name';
+  l2.textContent = clientName || '';
+  wrap.appendChild(l2);
+
+  // 第3行：未收款（如有）
+  if (unpaid) {
+    const l3 = document.createElement('span');
+    l3.className = 'unpaid';
+    l3.textContent = 'Unpaid';
+    wrap.appendChild(l3);
+  }
+
+  return { domNodes: [wrap] };
+}
+
 
       if (ext.type === 'Life') {
-        const t = formatTimeLower(arg.event.start);
-        const label = (ext.title && String(ext.title).trim()) ? String(ext.title).trim() : 'Life';
-        const wrap = document.createElement('div');
-        wrap.style.lineHeight = '1.1';
-        const line1 = document.createElement('div');
-        line1.textContent = `${t} ${label}`;
-        wrap.appendChild(line1);
-        return { domNodes: [wrap] };
-      }
+  const t = formatTimeLower(arg.event.start);
+  const label = ext.title || ext.name || arg.event.title || 'Life';
+
+  const wrap = document.createElement('div');
+  wrap.style.lineHeight = '1.1';
+
+  // 第1行：时间
+  const l1 = document.createElement('div');
+  l1.className = 'fc-event-time';
+  l1.textContent = t || '';
+  wrap.appendChild(l1);
+
+  // 第2行：标题（复用你三行CSS里的“第二行”样式）
+  const l2 = document.createElement('span');
+
+  l2.textContent = label || 'Life';
+  wrap.appendChild(l2);
+
+  return { domNodes: [wrap] };
+}
+
 
       return true;
     },

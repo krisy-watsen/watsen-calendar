@@ -894,7 +894,22 @@ async function exportFlow(){
   const ok = saveInvoiceRecord();
 if(!ok) return;
 
-try { await DriveShared.invoiceRecords.pushFromLocalToDrive(); } catch(e) {}
+try{
+  // 1) 尽量自动拿 token（已登录过就 silent 成功；没登录过就跳过，不打断你打印）
+  if (DriveShared.ensureAccessTokenAuto) {
+    await DriveShared.ensureAccessTokenAuto();
+  } else {
+    await DriveShared.ensureAccessToken(false);
+  }
+
+  // 2) 把本地记录写到 Drive 同一个文件：invoice_records.json
+  const KEY = "invoice_records_v1";
+  const localArr = JSON.parse(localStorage.getItem(KEY) || "[]");
+  await DriveShared.writeJson("invoice_records.json", localArr);
+
+}catch(e){
+  console.warn("Push invoice records to Drive failed:", e);
+}
 
 window.print();
 
