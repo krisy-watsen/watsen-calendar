@@ -659,7 +659,8 @@
             <td class="col-price"><div class="moneyWrap"><span class="moneySym">$</span><input class="cellField num moneyInput" data-role="price" inputmode="decimal" /></div></td>
 
             <td class="col-qty">
-              <input class="cellField num" data-role="qty" inputmode="numeric" />
+             <input class="cellField num" data-role="qty" inputmode="decimal" step="0.01" />
+
             </td>
 
             <td class="col-total">
@@ -793,7 +794,7 @@ function addItem(){
       </div>
     </td>
     <td class="col-price"><div class="moneyWrap"><span class="moneySym">$</span><input class="cellField num moneyInput" data-role="price" inputmode="decimal" /></div></td>
-    <td class="col-qty"><input class="cellField num" data-role="qty" inputmode="numeric" /></td>
+    <td class="col-qty"><input class="cellField num" data-role="qty" inputmode="decimal" step="0.01" /></td>
     <td class="col-total">$<span class="line-total">0.00</span></td>
     <td class="col-action"><button class="rowDel" type="button" title="Delete">×</button></td>
   `;
