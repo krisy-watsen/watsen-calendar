@@ -29,6 +29,9 @@ const DRIVE_ROOT_FOLDER_NAME = 'KrisyCalendar';
 const DRIVE_EVENTS_FILE_NAME = 'events.json';
 const DRIVE_CONFIG_FILE_NAME = 'krisy_calendar_config_v1.json';
 const LS_KEY_DRIVE_CONFIG_FILE_ID = 'krisy_drive_config_file_id_v1';
+const DRIVE_DATA_FOLDER_NAME = 'KrisyCalendar_Data';
+const DRIVE_RECEIPTS_FOLDER_NAME = 'Receipts';
+const DRIVE_WORK_PHOTOS_FOLDER_NAME = 'Work_Photos';
 
 const LS_KEY_LOCAL_UPDATED_AT = 'krisy_local_updated_at_v1';
 
@@ -161,6 +164,40 @@ async function ensureDriveConfigFile(rootFolderId) {
   localStorage.setItem(LS_KEY_DRIVE_CONFIG_FILE_ID, fileId);
   return fileId;
 }
+async function ensureDriveSubFolder(rootId, folderName) {
+  const q = [
+    `'${rootId}' in parents`,
+    `name='${folderName}'`,
+    `mimeType='application/vnd.google-apps.folder'`,
+    'trashed=false'
+  ].join(' and ');
+
+  const files = await driveSearchFiles(q);
+  const foundId = files[0]?.id;
+  if (foundId) return foundId;
+
+  const meta = {
+    name: folderName,
+    parents: [rootId],
+    mimeType: 'application/vnd.google-apps.folder'
+  };
+
+  const res = await driveFetch('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(meta)
+  });
+
+  const data = await res.json();
+  if (!data.id) throw new Error(`创建 Drive 子文件夹失败：${folderName}`);
+  return data.id;
+}
+async function ensureDriveFolders(rootId) {
+  const dataId = await ensureDriveSubFolder(rootId, DRIVE_DATA_FOLDER_NAME);
+  const receiptsId = await ensureDriveSubFolder(rootId, DRIVE_RECEIPTS_FOLDER_NAME);
+  const workPhotosId = await ensureDriveSubFolder(rootId, DRIVE_WORK_PHOTOS_FOLDER_NAME);
+  return { dataId, receiptsId, workPhotosId };
+}
 
 async function findExistingRootFolderId() {
   const q = [
@@ -172,10 +209,11 @@ async function findExistingRootFolderId() {
   return files[0]?.id || '';
 }
 
-async function findExistingEventsFileId(rootFolderId) {
+async function findExistingEventsFileId(dataFolderId) {
+
   const q = [
     `name='${DRIVE_EVENTS_FILE_NAME}'`,
-    `'${rootFolderId}' in parents`,
+    `'${dataFolderId}' in parents`,
     'trashed=false'
   ].join(' and ');
   const files = await driveSearchFiles(q);
@@ -184,7 +222,11 @@ async function findExistingEventsFileId(rootFolderId) {
 
 async function ensureDriveRootFolder() {
   const cached = localStorage.getItem(LS_KEY_DRIVE_ROOT_ID);
-  if (cached) return cached;
+  if (cached) {
+    // ensure config file exists for this cached root (best-effort)
+    try { await ensureDriveConfigFile(cached); } catch (e) { /* ignore */ }
+    return cached;
+  }
 
   // ✅ 优先通过 Drive 里的“锚点 config”定位唯一 root（跨设备/跨域名稳定）
   setCloudStatus('云端：定位主目录…');
@@ -226,7 +268,7 @@ async function ensureDriveEventsFile(rootFolderId) {
   if (cached) return cached;
 
   setCloudStatus('云端：查找 events.json…');
-  const existingId = await findExistingEventsFileId(rootFolderId);
+    const existingId = await findExistingEventsFileId(dataId);
   if (existingId) {
     localStorage.setItem(LS_KEY_DRIVE_EVENTS_FILE_ID, existingId);
     return existingId;
@@ -235,7 +277,8 @@ async function ensureDriveEventsFile(rootFolderId) {
   setCloudStatus('云端：创建 events.json…');
   const meta = {
     name: DRIVE_EVENTS_FILE_NAME,
-    parents: [rootFolderId],
+       parents: [dataId],
+
     mimeType: 'application/json'
   };
   const res = await driveFetch('https://www.googleapis.com/drive/v3/files', {
@@ -702,13 +745,28 @@ async function driveDownloadImageAsObjectUrl(fileId) {
   return url;
 }
 
-async function uploadAttachmentFile(file, eventId) {
-  const rootId = await ensureDriveRootFolder();
+async function uploadAttachmentFile(file, row) {
+
   // 文件名带 eventId，便于你在 Drive 里人工排查
-  const safeName = `${eventId}__${Date.now()}__${file.name}`;
+  const rootId = await ensureDriveRootFolder();
+const { receiptsId, workPhotosId } = await ensureDriveFolders(rootId);
+
+let parentId = rootId;
+let safeName = file.name;
+
+if (row?.type === 'Expense') {
+  parentId = receiptsId;
+  safeName = `R_${row.date}_${row.amount || 'NA'}_${Date.now()}`;
+}
+
+if (row?.type === 'Work') {
+  parentId = workPhotosId;
+  safeName = `W_${row.date}_${row.clientId || 'Client'}_${Date.now()}`;
+}
+
   const meta = {
     name: safeName,
-    parents: [rootId],
+    parents: [parentId],
     mimeType: file.type || 'application/octet-stream'
   };
 
@@ -1436,7 +1494,7 @@ async function handleSave(isDraft) {
       }
       setCloudStatus('云端：上传附件中…');
       for (const f of pendingFiles) {
-        const meta = await uploadAttachmentFile(f, row.id);
+        const meta = await uploadAttachmentFile(f, row);
         uploaded.push(meta);
       }
       setCloudStatus('云端：附件已上传');
