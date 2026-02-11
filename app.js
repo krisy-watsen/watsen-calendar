@@ -27,6 +27,9 @@ const LS_KEY_DRIVE_EVENTS_FILE_ID = 'krisy_drive_events_file_id_v1';
 
 const DRIVE_ROOT_FOLDER_NAME = 'KrisyCalendar';
 const DRIVE_EVENTS_FILE_NAME = 'events.json';
+const DRIVE_CONFIG_FILE_NAME = 'krisy_calendar_config_v1.json';
+const LS_KEY_DRIVE_CONFIG_FILE_ID = 'krisy_drive_config_file_id_v1';
+
 const LS_KEY_LOCAL_UPDATED_AT = 'krisy_local_updated_at_v1';
 
 
@@ -93,6 +96,71 @@ async function driveSearchFiles(q, fields = 'files(id,name,modifiedTime,parents)
   const data = await res.json();
   return Array.isArray(data.files) ? data.files : [];
 }
+async function findRootFolderIdByConfigFile() {
+  const q = [
+    `name='${DRIVE_CONFIG_FILE_NAME}'`,
+    `mimeType='application/json'`,
+    'trashed=false'
+  ].join(' and ');
+
+  const files = await driveSearchFiles(q);
+  const f = files[0];
+  // config 文件的 parents[0] 就是它所在的文件夹（我们会把 config 放在 root 里）
+  return f?.parents?.[0] || '';
+}
+async function ensureDriveConfigFile(rootFolderId) {
+  const cached = localStorage.getItem(LS_KEY_DRIVE_CONFIG_FILE_ID);
+  if (cached) return cached;
+
+  // 先查：root 里有没有 config
+  const q = [
+    `name='${DRIVE_CONFIG_FILE_NAME}'`,
+    `'${rootFolderId}' in parents`,
+    'trashed=false'
+  ].join(' and ');
+
+  const files = await driveSearchFiles(q);
+  const existingId = files[0]?.id;
+  if (existingId) {
+    localStorage.setItem(LS_KEY_DRIVE_CONFIG_FILE_ID, existingId);
+    return existingId;
+  }
+
+  // 没有就创建一个空的 config 文件，然后写入内容
+  setCloudStatus('云端：写入配置锚点…');
+  const meta = {
+    name: DRIVE_CONFIG_FILE_NAME,
+    parents: [rootFolderId],
+    mimeType: 'application/json'
+  };
+
+  const res = await driveFetch('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(meta)
+  });
+
+  const created = await res.json();
+  const fileId = created.id;
+  if (!fileId) throw new Error('创建 config 失败：没有返回 id');
+
+  const payload = {
+    app: 'KrisyCalendar',
+    schemaVersion: 1,
+    createdAt: new Date().toISOString(),
+    note: 'Anchor file used to locate the unique Drive root folder across devices/domains.'
+  };
+
+  const uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(fileId)}?uploadType=media`;
+  await driveFetch(uploadUrl, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+
+  localStorage.setItem(LS_KEY_DRIVE_CONFIG_FILE_ID, fileId);
+  return fileId;
+}
 
 async function findExistingRootFolderId() {
   const q = [
@@ -118,13 +186,25 @@ async function ensureDriveRootFolder() {
   const cached = localStorage.getItem(LS_KEY_DRIVE_ROOT_ID);
   if (cached) return cached;
 
+  // ✅ 优先通过 Drive 里的“锚点 config”定位唯一 root（跨设备/跨域名稳定）
+  setCloudStatus('云端：定位主目录…');
+  const rootByConfig = await findRootFolderIdByConfigFile();
+  if (rootByConfig) {
+    localStorage.setItem(LS_KEY_DRIVE_ROOT_ID, rootByConfig);
+    await ensureDriveConfigFile(rootByConfig);
+    return rootByConfig;
+  }
+
+  // 旧逻辑：按文件夹名找
   setCloudStatus('云端：查找文件夹…');
   const existingId = await findExistingRootFolderId();
   if (existingId) {
     localStorage.setItem(LS_KEY_DRIVE_ROOT_ID, existingId);
+    await ensureDriveConfigFile(existingId);   // ✅ 补上这一行
     return existingId;
   }
 
+  // 找不到就创建
   setCloudStatus('云端：创建文件夹中…');
   const meta = { name: DRIVE_ROOT_FOLDER_NAME, mimeType: 'application/vnd.google-apps.folder' };
   const res = await driveFetch('https://www.googleapis.com/drive/v3/files', {
@@ -134,9 +214,12 @@ async function ensureDriveRootFolder() {
   });
   const data = await res.json();
   if (!data.id) throw new Error('创建 Drive 文件夹失败：没有返回 id');
+
   localStorage.setItem(LS_KEY_DRIVE_ROOT_ID, data.id);
+  await ensureDriveConfigFile(data.id);        // ✅ 补上这一行
   return data.id;
 }
+
 
 async function ensureDriveEventsFile(rootFolderId) {
   const cached = localStorage.getItem(LS_KEY_DRIVE_EVENTS_FILE_ID);
