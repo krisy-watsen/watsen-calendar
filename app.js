@@ -854,16 +854,22 @@ async function cleanupOrphanAttachments() {
     const localEvents = loadEvents();
     const referenced = collectReferencedAttachmentFileIds(localEvents);
 
-    // 2) 列出云端文件夹全部文件
-    const files = await driveListFilesInFolder(rootId);
+    // 2) 只扫描附件文件夹（Receipts + Work_Photos），避免误删 Data 里的 json
+const { receiptsId, workPhotosId } = await ensureDriveFolders(rootId);
 
-    // 3) 过滤：不删 events.json；不删文件夹；只删“没被引用”的文件
-    const candidates = files.filter(f => {
-      if (!f?.id) return false;
-      if (f.name === 'events.json') return false;
-      if (f.mimeType === 'application/vnd.google-apps.folder') return false;
-      return !referenced.has(f.id);
-    });
+// 只列出两个附件目录的文件
+const files = [
+  ...(await driveListFilesInFolder(receiptsId)),
+  ...(await driveListFilesInFolder(workPhotosId))
+];
+
+// 3) 过滤：不删文件夹；只删“没被引用”的附件文件
+const candidates = files.filter(f => {
+  if (!f?.id) return false;
+  if (f.mimeType === 'application/vnd.google-apps.folder') return false;
+  return !referenced.has(f.id);
+});
+
 
     if (candidates.length === 0) {
       setCloudStatus('云端：无需清理（没有孤儿附件）', true);
