@@ -47,7 +47,8 @@ body{
 .topbar-center{ justify-self: center; }
 .topbar-right{
   justify-self: end;
-  padding-right: 6px;  /* 轻微内缩，避免视觉贴边 */
+  padding-right: max(18px, env(safe-area-inset-right));
+
 }
 
 
@@ -102,7 +103,13 @@ body{
   color:var(--text);
 }
 
-.topbar-right{ display:flex; align-items:center; gap:10px; }
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-right: max(18px, env(safe-area-inset-right));
+}
+
 
 .wrap{
   display:grid;

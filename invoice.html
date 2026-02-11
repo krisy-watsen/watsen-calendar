@@ -740,6 +740,7 @@
 
     </div>
   </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 function money(n){ return (Number.isFinite(n) ? n : 0).toFixed(2); }
@@ -878,6 +879,42 @@ function saveInvoiceRecord(){
   arr.unshift(rec); // 最新的放最上面
   localStorage.setItem(KEY, JSON.stringify(arr));
   return true;
+}
+async function exportPdfPreviewMobile(){
+  const target = document.querySelector(".card") || document.body;
+
+  // ✅ 关键：先同步打开新标签页（否则 iOS 会拦截 window.open）
+  const popup = window.open("about:blank", "_blank");
+  if (popup) {
+    popup.document.write(
+      '<div style="font-family:-apple-system; padding:16px;">Generating PDF…</div>'
+    );
+  }
+
+  const opt = {
+    margin: 0,
+    filename: "invoice.pdf", // 不下载也没关系
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  try{
+    const worker = html2pdf().set(opt).from(target).toPdf();
+    const pdf = await worker.get("pdf");
+    const blob = pdf.output("blob");
+    const url = URL.createObjectURL(blob);
+
+    if (popup) popup.location.href = url;
+    else window.open(url, "_blank");
+
+    // 1分钟后释放
+    setTimeout(() => URL.revokeObjectURL(url), 60 * 1000);
+  }catch(e){
+    try{ if (popup) popup.close(); }catch(_){}
+    console.error(e);
+    alert("PDF 生成失败，请重试。");
+  }
 }
 
 async function exportFlow(){
