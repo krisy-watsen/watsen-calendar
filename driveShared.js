@@ -202,9 +202,26 @@ async function ensureRecordFile() {
   );
 
   if (res.files && res.files.length) {
-    localStorage.setItem(LS_FILE_ID, res.files[0].id);
-    return res.files[0].id;
-  }
+  localStorage.setItem(LS_FILE_ID, res.files[0].id);
+  return res.files[0].id;
+}
+
+// ===== 兼容旧版本（没有 appProperties 的 invoice_records.json）=====
+const q2 = [
+  `name='${RECORD_FILE_NAME}'`,
+  `'${parentId}' in parents`,
+  "trashed=false"
+].join(" and ");
+
+const res2 = await driveFetch(
+  `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q2)}`
+);
+
+if (res2.files && res2.files.length) {
+  localStorage.setItem(LS_FILE_ID, res2.files[0].id);
+  return res2.files[0].id;
+}
+
 
   const created = await driveFetch(
     "https://www.googleapis.com/drive/v3/files",

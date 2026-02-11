@@ -955,7 +955,8 @@ try{
   // 2) 把本地记录写到 Drive 同一个文件：invoice_records.json
   const KEY = "invoice_records_v1";
   const localArr = JSON.parse(localStorage.getItem(KEY) || "[]");
-  await DriveShared.writeJson("invoice_records.json", localArr);
+ await DriveShared.writeJson(localArr);
+
 
 }catch(e){
   console.warn("Push invoice records to Drive failed:", e);
