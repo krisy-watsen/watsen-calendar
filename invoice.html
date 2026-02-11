@@ -11,10 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="Krisy" />
-<link rel="apple-touch-icon" href="./icons/icon-192.png" />
-
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="apple-touch-icon" href="./krisy-icon-180.png" /> 
 
   <title>Invoice</title>
   <style>
@@ -443,6 +440,18 @@
 
   /* ===== 打印：永远以电脑为准（锁死） ===== */
   @media print{
+        /* ✅ iPhone 兜底：打印白名单（只打印发票主体，其他一律不打印） */
+    body *{ visibility: hidden !important; }
+    .print-area, .print-area *{ visibility: visible !important; }
+
+    /* 把发票内容锚到页面左上角，避免 iPhone 打印分页错位 */
+    .print-area{
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      width: 100% !important;
+    }
+
     .top-safe, #backHomeBtn{ display:none !important; }
     body{ padding-top: 0 !important; }
 
@@ -580,8 +589,9 @@
 
 
 
-  <div class="page">
-    <div class="card">
+<div class="page print-area">
+  <div class="card">
+
 
       <!-- Header -->
       <div class="header">

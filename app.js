@@ -20,6 +20,11 @@ const LS_KEY_EVER_SIGNED_IN = 'krisy_ever_signed_in_v1'; // 记录“曾经成�
 
 const LS_KEY_PENDING_SYNC = 'krisy_pending_sync_v1';
 let bgSyncTimer = null;
+// ===== Merge Sync (自动队列合并) =====
+const LS_KEY_DEVICE_ID = 'krisy_device_id_v1';
+const LS_KEY_OPLOG = 'krisy_oplog_v1';
+const LS_KEY_TOMBSTONES = 'krisy_tombstones_v1';
+const LS_KEY_EVENTS_PREV = 'krisy_events_prev_v1';
 
 
 const LS_KEY_DRIVE_ROOT_ID = 'krisy_drive_root_id_v1';
@@ -107,10 +112,39 @@ async function findRootFolderIdByConfigFile() {
   ].join(' and ');
 
   const files = await driveSearchFiles(q);
-  const f = files[0];
-  // config 文件的 parents[0] 就是它所在的文件夹（我们会把 config 放在 root 里）
-  return f?.parents?.[0] || '';
+  if (!files || files.length === 0) return '';
+
+  // ✅ 如果只有一个，直接用它的 parents[0]
+  if (files.length === 1) {
+    return files[0]?.parents?.[0] || '';
+  }
+
+  // ✅ 多个锚点时：选“结构完整”的那个 root（root 下必须有 KrisyCalendar_Data）
+  for (const f of files) {
+    const rootId = f?.parents?.[0];
+    if (!rootId) continue;
+
+    try {
+      const qData = [
+        `'${rootId}' in parents`,
+        `name='${DRIVE_DATA_FOLDER_NAME}'`,
+        `mimeType='application/vnd.google-apps.folder'`,
+        'trashed=false'
+      ].join(' and ');
+
+      const dataFolders = await driveSearchFiles(qData);
+      if (dataFolders && dataFolders.length > 0) {
+        return rootId;
+      }
+    } catch (e) {
+      // ignore and continue
+    }
+  }
+
+  // ✅ 都不满足时，退回第一个（兜底）
+  return files[0]?.parents?.[0] || '';
 }
+
 async function ensureDriveConfigFile(rootFolderId) {
   const cached = localStorage.getItem(LS_KEY_DRIVE_CONFIG_FILE_ID);
   if (cached) return cached;
@@ -222,11 +256,22 @@ async function findExistingEventsFileId(dataFolderId) {
 
 async function ensureDriveRootFolder() {
   const cached = localStorage.getItem(LS_KEY_DRIVE_ROOT_ID);
-  if (cached) {
-    // ensure config file exists for this cached root (best-effort)
-    try { await ensureDriveConfigFile(cached); } catch (e) { /* ignore */ }
-    return cached;
-  }
+if (cached) {
+  // ✅ 校验：缓存的 root 是否仍然等于“锚点指向的 root”
+  try {
+    const rootByConfig = await findRootFolderIdByConfigFile();
+    if (rootByConfig && rootByConfig !== cached) {
+      // 缓存漂移了（跨域名/清缓存/历史遗留导致）
+      localStorage.setItem(LS_KEY_DRIVE_ROOT_ID, rootByConfig);
+      await ensureDriveConfigFile(rootByConfig);
+      return rootByConfig;
+    }
+    // best-effort：确保锚点存在
+    await ensureDriveConfigFile(cached);
+  } catch (e) { /* ignore */ }
+  return cached;
+}
+
 
   // ✅ 优先通过 Drive 里的“锚点 config”定位唯一 root（跨设备/跨域名稳定）
   setCloudStatus('云端：定位主目录…');
@@ -264,44 +309,70 @@ async function ensureDriveRootFolder() {
 
 
 async function ensureDriveEventsFile(rootFolderId) {
-  const cached = localStorage.getItem(LS_KEY_DRIVE_EVENTS_FILE_ID);
-  if (cached) return cached;
+  // ✅ 先拿 Data 文件夹 id（events.json 只允许放这里）
   const { dataId } = await ensureDriveFolders(rootFolderId);
 
+  // ✅ 1) 校验 cached eventsFileId：存在 + 未删除 + 父目录必须是 Data
+  const cached = localStorage.getItem(LS_KEY_DRIVE_EVENTS_FILE_ID);
+  if (cached) {
+    try {
+      const res = await driveFetch(
+        `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(cached)}?fields=id,parents,trashed`,
+        { method: 'GET' }
+      );
+      const info = await res.json();
+      if (
+        info?.id &&
+        !info?.trashed &&
+        Array.isArray(info.parents) &&
+        info.parents.includes(dataId)
+      ) {
+        return cached;
+      }
+    } catch (e) {
+      // ignore
+    }
+    // cached 无效 → 清掉，进入“按名称在 Data 查找”
+    localStorage.removeItem(LS_KEY_DRIVE_EVENTS_FILE_ID);
+  }
+
+  // ✅ 2) 在 Data 文件夹中按 name 查找 events.json
   setCloudStatus('云端：查找 events.json…');
-    const existingId = await findExistingEventsFileId(dataId);
+  const existingId = await findExistingEventsFileId(dataId);
   if (existingId) {
     localStorage.setItem(LS_KEY_DRIVE_EVENTS_FILE_ID, existingId);
     return existingId;
   }
 
+  // ✅ 3) 找不到才创建（创建在 Data）
   setCloudStatus('云端：创建 events.json…');
   const meta = {
     name: DRIVE_EVENTS_FILE_NAME,
-       parents: [dataId],
-
+    parents: [dataId],
     mimeType: 'application/json'
   };
+
   const res = await driveFetch('https://www.googleapis.com/drive/v3/files', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(meta)
   });
-  const data = await res.json();
-  const fileId = data.id;
-  if (!fileId) throw new Error('创建 events.json 失败：没有返回 id');
 
-  const initPayload = { version: 1, updatedAt: new Date().toISOString(), events: [] };
-  const uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(fileId)}?uploadType=media`;
-  await driveFetch(uploadUrl, {
+  const data = await res.json();
+  const id = data?.id;
+  if (!id) throw new Error('创建 events.json 失败');
+
+  // 写入空数组
+  await driveFetch(`https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(id)}?uploadType=media`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
-    body: JSON.stringify(initPayload)
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify([])
   });
 
-  localStorage.setItem(LS_KEY_DRIVE_EVENTS_FILE_ID, fileId);
-  return fileId;
+  localStorage.setItem(LS_KEY_DRIVE_EVENTS_FILE_ID, id);
+  return id;
 }
+
 
 async function cloudLoadEventsFromDrive() {
   const rootId = await ensureDriveRootFolder();
@@ -331,17 +402,12 @@ let cloudSaveTimer = null;
 function cloudQueueSave(events) {
   if (!gAccessToken) return;
   if (cloudSaveTimer) clearTimeout(cloudSaveTimer);
+
   cloudSaveTimer = setTimeout(async () => {
-    try {
-      setCloudStatus('云端：同步中…');
-      await cloudWriteEventsToDrive(events);
-      setCloudStatus('云端：已同步');
-    } catch (e) {
-      console.error(e);
-      setCloudStatus('云端：同步失败（看控制台）', false);
-    }
+    await syncCloudMergeNow('在线保存');
   }, 650);
 }
+
 
 function initGoogleLogin() {
   const btn = document.getElementById('googleLoginBtn');
@@ -367,57 +433,15 @@ function initGoogleLogin() {
   // 记录：此浏览器曾经成功登录授权过（用于下次静默自动连接）
   try { localStorage.setItem(LS_KEY_EVER_SIGNED_IN, '1'); } catch (e) {}
 
-  try {
-    await ensureDriveRootFolder();
+ try {
+  await ensureDriveRootFolder();
+  await syncCloudMergeNow('登录后对齐');
+  setTimeout(backgroundSyncIfNeeded, 300);
+} catch (e) {
+  console.error(e);
+  setCloudStatus('云端：初始化失败（看控制台）', false);
+}
 
-    const cloudEventsRaw = await cloudLoadEventsFromDrive();
-    const cloudEvents = Array.isArray(cloudEventsRaw)
-      ? cloudEventsRaw
-      : (cloudEventsRaw?.events || []);
-
-    const localEvents = loadEvents();
-    const hasLocal = Array.isArray(localEvents) && localEvents.length > 0;
-    const hasCloud = Array.isArray(cloudEvents) && cloudEvents.length > 0;
-
-    // 防止云端空数据覆盖本地
-    const localUpdatedMs = Number(localStorage.getItem(LS_KEY_LOCAL_UPDATED_AT) || '0');
-
-    if (!hasCloud && hasLocal) {
-      setCloudStatus('云端：已连接（云端为空，保留本地数据）');
-     
-
-      // 让 UI 明确使用本地数据
-      allEvents = localEvents;
-      refreshCalendar();
-      renderMini(calendar.getDate());
-      setTimeout(backgroundSyncIfNeeded, 300);
-
-    } else if (hasLocal && localUpdatedMs > 0) {
-      // ✅ 保险逻辑：本地有更新痕迹→保留本地，等待后台同步
-       setCloudStatus('云端：已连接（本地为准，后台补同步）');
-
-      allEvents = localEvents;
-      refreshCalendar();
-      renderMini(calendar.getDate());
-
-       setTimeout(backgroundSyncIfNeeded, 300);
-
-    } else {
-      // 云端为准覆盖本地
-      localStorage.setItem(LS_KEY_EVENTS, JSON.stringify(cloudEvents));
-
-      allEvents = loadEvents();
-      refreshCalendar();
-      renderMini(calendar.getDate());
-
-      setCloudStatus('云端：已连接（已拉取云端数据）');
-      setTimeout(backgroundSyncIfNeeded, 300);
-
-    }
-  } catch (e) {
-    console.error(e);
-    setCloudStatus('云端：初始化失败（看控制台）', false);
-  }
 },
 
   });
@@ -466,6 +490,145 @@ function safeParse(json, fallback) {
     return fallback;
   }
 }
+function getDeviceId() {
+  let id = '';
+  try { id = localStorage.getItem(LS_KEY_DEVICE_ID) || ''; } catch(e) {}
+  if (!id) {
+    id = 'D' + Math.random().toString(16).slice(2) + Date.now().toString(16);
+    try { localStorage.setItem(LS_KEY_DEVICE_ID, id); } catch(e) {}
+  }
+  return id;
+}
+
+function loadOplog() {
+  return safeParse(localStorage.getItem(LS_KEY_OPLOG) || '[]', []);
+}
+function saveOplog(ops) {
+  localStorage.setItem(LS_KEY_OPLOG, JSON.stringify(Array.isArray(ops) ? ops : []));
+}
+function loadTombstones() {
+  return safeParse(localStorage.getItem(LS_KEY_TOMBSTONES) || '[]', []);
+}
+function saveTombstones(t) {
+  localStorage.setItem(LS_KEY_TOMBSTONES, JSON.stringify(Array.isArray(t) ? t : []));
+}
+
+// 把“本次保存前后的 events”做 diff，记录成队列（upsert/delete）
+function recordOpsFromDiff(prevRows, nextRows) {
+  const now = Date.now();
+  const dev = getDeviceId();
+
+  const prev = Array.isArray(prevRows) ? prevRows : [];
+  const next = Array.isArray(nextRows) ? nextRows : [];
+
+  const prevMap = new Map(prev.map(e => [e.id, e]));
+  const nextMap = new Map(next.map(e => [e.id, e]));
+
+  const ops = loadOplog();
+  const tomb = loadTombstones();
+
+  // upsert：新增或变更
+  for (const [id, e] of nextMap.entries()) {
+    const before = prevMap.get(id);
+    if (!before || JSON.stringify(before) !== JSON.stringify(e)) {
+      const data = { ...e, _updatedMs: now, _dev: dev };
+      ops.push({ t: now, dev, op: 'upsert', id, data });
+    }
+  }
+
+  // delete：之前有、现在没有
+  for (const [id] of prevMap.entries()) {
+    if (!nextMap.has(id)) {
+      tomb.push({ id, deletedMs: now, dev });
+      ops.push({ t: now, dev, op: 'delete', id });
+    }
+  }
+
+  saveOplog(ops);
+  saveTombstones(tomb);
+}
+
+// 把 oplog 合并到云端 events（LWW + tombstone 防复活）
+function mergeEventsByOplog(cloudEvents, ops, tombstones) {
+  const base = Array.isArray(cloudEvents) ? cloudEvents : [];
+  const map = new Map(base.map(e => [e.id, e]));
+
+  const tomb = Array.isArray(tombstones) ? tombstones : [];
+  const tombSet = new Set(tomb.map(x => x.id));
+
+  const list = Array.isArray(ops) ? ops.slice() : [];
+  list.sort((a, b) => (a.t || 0) - (b.t || 0));
+
+  for (const o of list) {
+    if (!o || !o.id) continue;
+
+    if (o.op === 'delete') {
+      map.delete(o.id);
+      tombSet.add(o.id);
+      continue;
+    }
+
+    if (o.op === 'upsert' && o.data) {
+      if (tombSet.has(o.id)) {
+        // 如果这条 id 已被删除墓碑记录过，upsert 也不让它复活（更稳）
+        continue;
+      }
+      const cur = map.get(o.id);
+      const curMs = Number(cur?._updatedMs || 0);
+      const nextMs = Number(o.data?._updatedMs || o.t || 0);
+      if (!cur || nextMs >= curMs) {
+        map.set(o.id, o.data);
+      }
+    }
+  }
+
+  // 删除墓碑最终生效，防止复活
+  for (const id of tombSet) {
+    map.delete(id);
+  }
+
+  return Array.from(map.values());
+}
+
+// 核心：在线后一次性“拉云端→合并→写回→本地对齐”
+async function syncCloudMergeNow(reason = '') {
+  if (!navigator.onLine) return;
+  if (!gAccessToken) return;
+
+  try {
+    setCloudStatus(reason ? `云端：同步中（${reason}）…` : '云端：同步中…', true);
+
+    const cloudEvents = await cloudLoadEventsFromDrive();
+    const ops = loadOplog();
+    const tomb = loadTombstones();
+
+    const merged = mergeEventsByOplog(cloudEvents, ops, tomb);
+
+    // 只有需要时才写回（减少写入）
+    const cloudStr = JSON.stringify(cloudEvents || []);
+    const mergedStr = JSON.stringify(merged || []);
+    if (mergedStr !== cloudStr) {
+      await cloudWriteEventsToDrive(merged);
+    }
+
+    // ✅ 同步成功：云端吸收了本机离线改动 → 清队列/标记
+    try { localStorage.removeItem(LS_KEY_PENDING_SYNC); } catch(e) {}
+    try { localStorage.removeItem(LS_KEY_LOCAL_UPDATED_AT); } catch(e) {}
+    try { localStorage.removeItem(LS_KEY_OPLOG); } catch(e) {}
+    try { localStorage.removeItem(LS_KEY_TOMBSTONES); } catch(e) {}
+
+    // ✅ 本地对齐到最终结果（非常关键：让B覆盖旧本地）
+    localStorage.setItem(LS_KEY_EVENTS, JSON.stringify(merged));
+    allEvents = merged;
+    refreshCalendar();
+    renderMini(calendar.getDate());
+
+    setCloudStatus('云端：已同步', true);
+  } catch (e) {
+    console.error(e);
+    setCloudStatus('云端：同步失败（会自动重试）', false);
+  }
+}
 
 function loadClients() {
   let c = safeParse(localStorage.getItem(LS_KEY_CLIENTS) || '[]', []);
@@ -487,50 +650,37 @@ function loadEvents() {
 
 // ✅ 保存本地后排队云同步
 function saveEvents(rows) {
+  const prev = safeParse(localStorage.getItem(LS_KEY_EVENTS) || '[]', []);
+  // 先记录队列（离线也能记）
+  try { recordOpsFromDiff(prev, rows); } catch(e) { console.warn(e); }
+
   localStorage.setItem(LS_KEY_EVENTS, JSON.stringify(rows));
 
-  // ✅ 新增：只要本地有变更，就标记“待同步”
+  // 只要本地有变更，就标记“待同步”
   try { localStorage.setItem(LS_KEY_PENDING_SYNC, '1'); } catch(e) {}
   try { localStorage.setItem(LS_KEY_LOCAL_UPDATED_AT, Date.now().toString()); } catch(e) {}
 
-  // 没连云端也没关系：先本地保存，给你明确提示
-if (!gAccessToken) {
-  setCloudStatus('本地：已保存（未连接云端，稍后会自动补同步）', true);
-}
+  if (!gAccessToken) {
+    setCloudStatus('本地：已保存（未连接云端，稍后会自动补同步）', true);
+    return;
+  }
 
+  // 在线：走合并同步（不是直接覆盖写）
   cloudQueueSave(rows);
 }
 
-async function backgroundSyncIfNeeded() {
-  // 1) 必须在线
-  if (!navigator.onLine) return;
 
-  // 2) 必须有 token（没 token 就等下次自动连/手动登录）
+async function backgroundSyncIfNeeded() {
+  if (!navigator.onLine) return;
   if (!gAccessToken) return;
 
-  // 3) 必须存在待同步标记
   let pending = '';
   try { pending = localStorage.getItem(LS_KEY_PENDING_SYNC) || ''; } catch(e) {}
   if (!pending) return;
 
-  // 4) 读取本地 events，推到云端
-  try {
-    const localEvents = loadEvents();
-    if (!Array.isArray(localEvents)) return;
-
-    setCloudStatus('云端：后台补同步中…', true);
-    await cloudWriteEventsToDrive(localEvents);
-
-    // ✅ 同步成功，清掉 pending
-    try { localStorage.removeItem(LS_KEY_PENDING_SYNC); } catch(e) {}
-
-    setCloudStatus('云端：已同步（后台）', true);
-  } catch (e) {
-    // 同步失败就继续保留 pending，下次再试
-    console.error(e);
-    setCloudStatus('云端：后台同步失败（会自动重试）', false);
-  }
+  await syncCloudMergeNow('后台补同步');
 }
+
 
 function startBackgroundSyncLoop() {
   if (bgSyncTimer) return;
@@ -1278,6 +1428,10 @@ function clearForm() {
 
 function applyTypeUI() {
   const t = typeEl.value;
+  // ✅ 只在 Work 显示「排班/草稿」，Life / Expense 隐藏
+  if (saveDraftBtn) {
+    saveDraftBtn.style.display = (t === 'Work') ? 'inline-flex' : 'none';
+  }
 
   startField.classList.remove('hidden');
   durationField.classList.remove('hidden');

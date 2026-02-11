@@ -47,9 +47,8 @@ body{
 .topbar-center{ justify-self: center; }
 .topbar-right{
   justify-self: end;
-  padding-right: max(18px, env(safe-area-inset-right));
-
 }
+
 
 
 .topbar-left{ display:flex; align-items:center; gap:14px; }
@@ -107,8 +106,8 @@ body{
   display:flex;
   align-items:center;
   gap:10px;
-  padding-right: max(18px, env(safe-area-inset-right));
 }
+
 
 
 .wrap{
