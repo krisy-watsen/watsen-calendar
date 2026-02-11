@@ -266,6 +266,7 @@ async function ensureDriveRootFolder() {
 async function ensureDriveEventsFile(rootFolderId) {
   const cached = localStorage.getItem(LS_KEY_DRIVE_EVENTS_FILE_ID);
   if (cached) return cached;
+  const { dataId } = await ensureDriveFolders(rootFolderId);
 
   setCloudStatus('云端：查找 events.json…');
     const existingId = await findExistingEventsFileId(dataId);
