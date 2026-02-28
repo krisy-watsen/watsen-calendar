@@ -25,6 +25,8 @@ const LS_KEY_DEVICE_ID = 'krisy_device_id_v1';
 const LS_KEY_OPLOG = 'krisy_oplog_v1';
 const LS_KEY_TOMBSTONES = 'krisy_tombstones_v1';
 const LS_KEY_EVENTS_PREV = 'krisy_events_prev_v1';
+const LS_KEY_DRIVE_CLIENTS_FILE_ID = 'krisy_drive_clients_file_id_v1';
+const DRIVE_CLIENTS_FILE_NAME = 'clients.json';
 
 
 const LS_KEY_DRIVE_ROOT_ID = 'krisy_drive_root_id_v1';
@@ -93,7 +95,7 @@ async function driveSearchFiles(q, fields = 'files(id,name,modifiedTime,parents)
   const params = new URLSearchParams({
     q,
     fields,
-    pageSize: '10',
+    pageSize: '100',
     spaces: 'drive',
     orderBy: 'modifiedTime desc',
     includeItemsFromAllDrives: 'true',
@@ -243,10 +245,9 @@ async function findExistingRootFolderId() {
   return files[0]?.id || '';
 }
 
-async function findExistingEventsFileId(dataFolderId) {
-
+async function findExistingClientsFileId(dataFolderId) {
   const q = [
-    `name='${DRIVE_EVENTS_FILE_NAME}'`,
+    `name='${DRIVE_CLIENTS_FILE_NAME}'`,
     `'${dataFolderId}' in parents`,
     'trashed=false'
   ].join(' and ');
@@ -365,24 +366,191 @@ async function ensureDriveEventsFile(rootFolderId) {
   // 写入空数组
   await driveFetch(`https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(id)}?uploadType=media`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify([])
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({ version: 1, updatedAt: new Date().toISOString(), events: [] })
   });
 
   localStorage.setItem(LS_KEY_DRIVE_EVENTS_FILE_ID, id);
   return id;
 }
 
+async function ensureDriveClientsFile(rootFolderId) {
+  // clients.json 也只允许放在 Data 文件夹
+  const { dataId } = await ensureDriveFolders(rootFolderId);
+
+  // 1) 校验 cached clientsFileId：存在 + 未删除 + 父目录必须是 Data
+  const cached = localStorage.getItem(LS_KEY_DRIVE_CLIENTS_FILE_ID);
+  if (cached) {
+    try {
+      const res = await driveFetch(
+        `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(cached)}?fields=id,parents,trashed`,
+        { method: 'GET' }
+      );
+      const info = await res.json();
+      if (
+        info?.id &&
+        !info?.trashed &&
+        Array.isArray(info.parents) &&
+        info.parents.includes(dataId)
+      ) {
+        return cached;
+      }
+    } catch (e) {
+      // ignore
+    }
+    localStorage.removeItem(LS_KEY_DRIVE_CLIENTS_FILE_ID);
+  }
+
+  // 2) 在 Data 文件夹按 name 查找 clients.json
+  setCloudStatus('云端：查找 clients.json…');
+  const existingId = await findExistingClientsFileId(dataId);
+  if (existingId) {
+    localStorage.setItem(LS_KEY_DRIVE_CLIENTS_FILE_ID, existingId);
+    return existingId;
+  }
+
+  // 3) 找不到才创建（创建在 Data）
+  setCloudStatus('云端：创建 clients.json…');
+  const meta = {
+    name: DRIVE_CLIENTS_FILE_NAME,
+    parents: [dataId],
+    mimeType: 'application/json'
+  };
+
+  const res = await driveFetch('https://www.googleapis.com/drive/v3/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(meta)
+  });
+
+  const data = await res.json();
+  const id = data?.id;
+  if (!id) throw new Error('创建 clients.json 失败');
+
+  // 初始化写入（用对象结构，后续读取更稳）
+  const initPayload = { version: 1, updatedAt: new Date().toISOString(), clients: [] };
+  await driveFetch(`https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(id)}?uploadType=media`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify(initPayload)
+  });
+
+  localStorage.setItem(LS_KEY_DRIVE_CLIENTS_FILE_ID, id);
+  return id;
+}
 
 async function cloudLoadEventsFromDrive() {
   const rootId = await ensureDriveRootFolder();
   const fileId = await ensureDriveEventsFile(rootId);
   setCloudStatus('云端：读取 events.json…');
-  const res = await driveFetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`, {
-    method: 'GET'
+
+  const res = await driveFetch(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`,
+    { method: 'GET' }
+  );
+
+  const json = await res.json().catch(() => ({}));
+
+  // ✅ 兼容旧格式：纯数组
+  if (Array.isArray(json)) return json;
+
+  // ✅ 新格式：对象 { events: [...] }
+  if (Array.isArray(json?.events)) return json.events;
+
+  return [];
+}
+async function syncClientsOnLogin() {
+  try {
+    // 1) 读取云端 clients
+    const cloudClients = await cloudLoadClientsFromDrive();
+
+    // 2) 读取本地 clients（如果你本地有旧客户，第一次要推上云）
+    const localClientsRaw = localStorage.getItem(LS_KEY_CLIENTS) || '[]';
+    const localClients = safeParse(localClientsRaw, []);
+    const localArr = Array.isArray(localClients) ? localClients : [];
+
+// 判断本地是否“真有客户数据”
+// （因为你的 loadClients 没数据时会塞默认 3 个客户）
+const hasRealLocal = localArr.some(c =>
+  c?.clientId && c?.name && !['C001','C002','C003'].includes(c.clientId)
+);
+
+    // 情况 1：云端有客户 → 用云端覆盖本地（B 手机最需要这个）
+if (Array.isArray(cloudClients) && cloudClients.length > 0) {
+  // 合并：云端 + 本地（本地优先，防止离线新增客户丢失）
+  const mergedMap = new Map();
+
+  // 先放云端
+  cloudClients.forEach(c => { if (c?.clientId) mergedMap.set(c.clientId, c); });
+
+  // 再放本地（同 clientId 用本地覆盖）
+  localArr.forEach(c => { if (c?.clientId) mergedMap.set(c.clientId, c); });
+
+  clients = Array.from(mergedMap.values());
+  localStorage.setItem(LS_KEY_CLIENTS, JSON.stringify(clients));
+
+  // 合并后写回云端，让云端吸收本地离线新增
+  await cloudWriteClientsToDrive(clients);
+
+  renderClients();
+  refreshCalendar();
+  updateClientAddressUI();
+  return;
+}
+
+    // 情况 2：云端为空 + 本地有真实客户 → 把本地推上云（A 手机第一次迁移靠这个）
+    if ((!cloudClients || cloudClients.length === 0) && hasRealLocal) {
+      await cloudWriteClientsToDrive(localArr);
+
+      // 推上云后再读一次（保险）
+      const again = await cloudLoadClientsFromDrive();
+      if (again && again.length > 0) {
+        clients = again;
+        localStorage.setItem(LS_KEY_CLIENTS, JSON.stringify(clients));
+        renderClients();
+        refreshCalendar();
+        updateClientAddressUI();
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    setCloudStatus('云端：客户对齐失败（看控制台）', false);
+  }
+}
+
+async function cloudLoadClientsFromDrive() {
+  const rootId = await ensureDriveRootFolder();
+  const fileId = await ensureDriveClientsFile(rootId);
+  setCloudStatus('云端：读取 clients.json…');
+
+  const res = await driveFetch(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`,
+    { method: 'GET' }
+  );
+
+  const json = await res.json().catch(() => ({}));
+
+  // 兼容：万一某次写成纯数组，也能读
+  if (Array.isArray(json)) return json;
+  return Array.isArray(json?.clients) ? json.clients : [];
+}
+
+async function cloudWriteClientsToDrive(rows) {
+  const rootId = await ensureDriveRootFolder();
+  const fileId = await ensureDriveClientsFile(rootId);
+
+  const payload = {
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    clients: Array.isArray(rows) ? rows : []
+  };
+
+  const uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${encodeURIComponent(fileId)}?uploadType=media`;
+  await driveFetch(uploadUrl, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify(payload)
   });
-  const json = await res.json();
-  return Array.isArray(json?.events) ? json.events : [];
 }
 
 async function cloudWriteEventsToDrive(events) {
@@ -408,6 +576,23 @@ function cloudQueueSave(events) {
   }, 650);
 }
 
+let cloudClientsSaveTimer = null;
+function cloudQueueSaveClients(rows) {
+  if (!gAccessToken) return;
+  if (cloudClientsSaveTimer) clearTimeout(cloudClientsSaveTimer);
+
+  cloudClientsSaveTimer = setTimeout(async () => {
+    try {
+      await cloudWriteClientsToDrive(rows);
+      // 不强刷状态也行；你想看更明确就打开下面这一行
+      // setCloudStatus('云端：客户已同步', true);
+    } catch (e) {
+      console.error(e);
+      setCloudStatus('云端：客户同步失败（会自动重试）', false);
+    }
+  }, 650);
+}
+
 
 function initGoogleLogin() {
   const btn = document.getElementById('googleLoginBtn');
@@ -424,6 +609,7 @@ function initGoogleLogin() {
     
     callback: async (resp) => {
   if (!resp || !resp.access_token) {
+    setTimeout(autoConnectOnLoad, 200);
     setCloudStatus('云端：登录失败', false);
     return;
   }
@@ -436,7 +622,9 @@ function initGoogleLogin() {
  try {
   await ensureDriveRootFolder();
   await syncCloudMergeNow('登录后对齐');
+  await syncClientsOnLogin(); // ✅ 新增这一行
   setTimeout(backgroundSyncIfNeeded, 300);
+
 } catch (e) {
   console.error(e);
   setCloudStatus('云端：初始化失败（看控制台）', false);
@@ -695,6 +883,7 @@ function startBackgroundSyncLoop() {
 
 function saveClients(rows) {
   localStorage.setItem(LS_KEY_CLIENTS, JSON.stringify(rows));
+  cloudQueueSaveClients(rows); // ✅ 新增：同步到 Drive
 }
 
 // =============================
@@ -1002,6 +1191,7 @@ async function cleanupOrphanAttachments() {
     const rootId = await ensureDriveRootFolder();
 
     // 1) 取本地事件（你的系统本地永远是可用的；云端同步由你现有机制负责）
+    await syncCloudMergeNow('清理前对齐');
     const localEvents = loadEvents();
     const referenced = collectReferencedAttachmentFileIds(localEvents);
 
