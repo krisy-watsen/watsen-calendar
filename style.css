@@ -335,7 +335,7 @@ body{
   box-shadow:0 0 0 4px rgba(0,0,0,.06);
 }
 /* 顶部中间：隐藏导航按钮和标题（不删DOM，避免 app.js 报错） */
-#prevBtn, #nextBtn, #titlebar{
+#prevBtn, #todayBtn, #nextBtn, #titlebar{
   display:none !important;
 }
 /* 让状态点用 class 控制颜色 */
