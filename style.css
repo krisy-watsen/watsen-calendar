@@ -732,4 +732,32 @@ input, .field select, textarea{
 .switch input:checked + .slider:before{
   transform: translateX(18px);
 }
+  /* ===== Phone: Re-layout Event modal fields ===== */
+  #overlay .grid2{
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* 第1行：Type | Date */
+  #typeField{   grid-column: 1; grid-row: 1; }
+  #dateField{   grid-column: 2; grid-row: 1; }
+
+  /* 第2行：Start | Repeat（Repeat 去原 Duration 位置） */
+  #startField{  grid-column: 1; grid-row: 2; }
+  #repeatField{ grid-column: 2; grid-row: 2; }
+
+  /* 第3行：Client 占满一行（原 Repeat 那个“格子”相当于不存在了） */
+  #clientField{ grid-column: 1 / -1; grid-row: 3; }
+
+  /* 第4行：Duration | Amount（Duration 去原 Title 位置） */
+  #durationField{ grid-column: 1; grid-row: 4; }
+  #amountField{   grid-column: 2; grid-row: 4; }
+
+  /* 第5行：Category（保持原逻辑） */
+  #categoryField{ grid-column: 1; grid-row: 5; }
+
+  /* 第6行：Title 移到 Attachments 上面，占满一行 */
+  #titleField{  grid-column: 1 / -1; grid-row: 6; }
+
+  /* 第7行：Attachments 占满一行 */
+  #attachmentField{ grid-column: 1 / -1; grid-row: 7; }
 }
