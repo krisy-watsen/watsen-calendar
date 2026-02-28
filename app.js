@@ -1006,6 +1006,7 @@ function updateClientAddressUI() {
 // Client Manager (Edit/Deactivate/Delete)
 // =============================
 const manageClientsBtn = document.getElementById('manageClientsBtn');
+
 const clientOverlay = document.getElementById('clientOverlay');
 const clientCloseBtn = document.getElementById('clientCloseBtn');
 const clientSaveBtn  = document.getElementById('clientSaveBtn');
@@ -1015,7 +1016,7 @@ const clientHint     = document.getElementById('clientHint');
 
 function openClientManager(){
   if (!clientOverlay) return;
-  clientHint.textContent = '';
+  if (clientHint) clientHint.textContent = '';
   renderClientManager();
   clientOverlay.style.display = 'flex';
 }
@@ -1060,16 +1061,26 @@ function renderClientManager(){
 
       <div class="client-actions">
         <div class="left">
-          <label style="margin:0; display:flex; gap:8px; align-items:center;">
-            <input type="checkbox" class="cm-active" ${c.active !== false ? 'checked' : ''}/>
-            启用（取消=停用）
-          </label>
+          <div class="cm-toggle">
+        <label class="switch">
+    <input type="checkbox" class="cm-active" ${c.active !== false ? 'checked' : ''}/>
+    <span class="slider"></span>
+  </label>
+  <span class="cm-state">${c.active !== false ? '启用' : '停用'}</span>
+  <span class="help">停用后：下拉隐藏，但历史记录仍显示名字</span>
+</div>
           ${isClientUsed(c.clientId) ? '<span class="help">⚠️ 已被历史事件使用：建议停用，不建议删除</span>' : ''}
         </div>
         <button type="button" class="btn danger cm-del">删除</button>
       </div>
     `;
-
+const activeCb = row.querySelector('.cm-active');
+const stateEl = row.querySelector('.cm-state');
+if (activeCb && stateEl) {
+  activeCb.addEventListener('change', () => {
+    stateEl.textContent = activeCb.checked ? '启用' : '停用';
+  });
+}
     row.querySelector('.cm-del').addEventListener('click', () => {
       const id = c.clientId;
       if (isClientUsed(id)) {
@@ -1142,6 +1153,32 @@ if (clientCloseBtn) clientCloseBtn.addEventListener('click', closeClientManager)
 if (clientSaveBtn)  clientSaveBtn.addEventListener('click', saveClientManagerEdits);
 if (clientAddBtn)   clientAddBtn.addEventListener('click', addClientFromManager);
 if (clientOverlay)  clientOverlay.addEventListener('click', (e) => { if (e.target === clientOverlay) closeClientManager(); });
+
+const editClientBtn = document.getElementById('editClientBtn');
+
+function openClientManagerTo(clientId){
+  openClientManager(); // 你原本的打开客户管理
+  // 等 DOM 渲染完再定位
+  setTimeout(() => {
+    const row = document.querySelector(`.client-row[data-id="${clientId}"]`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const nameInput = row.querySelector('.cm-name');
+      if (nameInput) nameInput.focus();
+    }
+  }, 50);
+}
+
+if (editClientBtn) {
+  editClientBtn.addEventListener('click', () => {
+    const id = clientEl.value;
+    if (!id || id === '__new__') {
+      alert('请先在下拉里选择一个客户，再点编辑。');
+      return;
+    }
+    openClientManagerTo(id);
+  });
+}
 
 clientEl.addEventListener('change', () => {
   if (clientEl.value === '__new__') {
