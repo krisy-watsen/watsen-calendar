@@ -590,4 +590,26 @@ body{
     line-height: 1.1;
     white-space: nowrap;
   }
+    /* iPhone Safari: prevent input focus zoom (causes modal jump) */
+input, .field select, textarea{
+  font-size: 16px;
+}
+  
+  /* Phone modal: fit into viewport even when keyboard shows */
+.overlay{
+  align-items: flex-start;                 /* 不要强行垂直居中，键盘出来会更稳 */
+  padding-top: max(12px, env(safe-area-inset-top));
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+.modal{
+  max-height: calc(100dvh - 24px);         /* 关键：跟随动态视口高度（键盘出现也能适配） */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body{
+  overflow: auto;                           /* 内容多就内部滚动，不要撑大外层 */
+  -webkit-overflow-scrolling: touch;
+}
 }
