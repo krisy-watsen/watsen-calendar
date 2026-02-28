@@ -1936,10 +1936,19 @@ function validate(canDraft = false) {
 
 // Repeat dates
 function addDays(isoDate, days) {
-  const d = new Date(isoDate + 'T00:00:00');
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  // isoDate: 'YYYY-MM-DD'
+  const [y, m, d] = isoDate.split('-').map(Number);
+
+  // 用“本地时间”的年月日创建日期，避免 toISOString() 转 UTC 导致回退一天
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + days);
+
+  const yy = dt.getFullYear();
+  const mm = String(dt.getMonth() + 1).padStart(2, '0');
+  const dd = String(dt.getDate()).padStart(2, '0');
+  return `${yy}-${mm}-${dd}`;
 }
+
 function generateRepeatDates(baseDate, rule) {
   if (rule === 'weekly') return Array.from({ length: REPEAT_TOTAL }, (_, i) => addDays(baseDate, i * 7));
   if (rule === 'fortnightly') return Array.from({ length: REPEAT_TOTAL }, (_, i) => addDays(baseDate, i * 14));
