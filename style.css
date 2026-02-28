@@ -520,40 +520,74 @@ body{
 
 @media (max-width: 600px){
 
-  /* 日历更接近满屏 */
+  /* 日历更接近满屏（保留你现有的） */
   .wrap{ padding: 6px; }
   .content{ padding: 0; }
 
-  /* 顶部左右与日历一致 + safe-area */
+  /* ===== Topbar: two rows on phone ===== */
   .topbar-inner{
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* col1: login, col2: seg, col3: + */
+    grid-template-rows: auto auto;        /* row1: title, row2: controls */
+    row-gap: 8px;
+    align-items: center;
+
     padding-left: max(6px, env(safe-area-inset-left));
     padding-right: max(6px, env(safe-area-inset-right));
-    column-gap: 8px;
-    font-size: clamp(12px, 3.3vw, 14px);
-    grid-template-columns: auto 1fr auto;
   }
 
-  /* 保证手机永远一行 */
-  .topbar-center{ flex-wrap: nowrap; }
+  /* 关键：让 topbar-left 里的 brand/cloud 变成“网格直接子元素”，才能分到两行 */
+  .topbar-left{ display: contents; }
 
-  /* grid 子项允许收缩（关键） */
-  .topbar-inner > *{ min-width: 0; }
+  /* 第1行：只放标题 */
+  .topbar-left .brand{
+    grid-column: 1 / 4;
+    grid-row: 1;
+    justify-self: start;
+  }
 
-  /* 只在手机隐藏 prev/next/title（你不需要“今天”没关系，这里不写 todayBtn） */
-  #prevBtn, #nextBtn, #titlebar{ display:none !important; }
+  /* 第2行左侧：Google 登录 + 云端状态 */
+  .topbar-left .cloud{
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-  /* 按钮/seg 统一紧凑并自适应 */
+  /* 第2行中间：Month / Week / day */
+  .topbar-center{
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  /* 第2行右侧：+ */
+  .topbar-right{
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  /* 你说不需要 Today：并且把 prev/next/title 一起隐藏，手机更清爽 */
+  #prevBtn, #todayBtn, #nextBtn, #titlebar{
+    display: none !important;
+  }
+
+  /* 方案A：整体紧凑一点点（美观，且保证一行） */
+  .topbar-inner{ font-size: clamp(12px, 3.3vw, 14px); }
+
   .btn,
   .seg button{
     font-size: clamp(11px, 3.0vw, 13px);
     padding: 6px 8px;
     line-height: 1.1;
     white-space: nowrap;
-  }
-
-  /* 标题栏自适应（即使隐藏也无害） */
-  .titlebar{
-    font-size: clamp(12px, 3.2vw, 14px);
-    min-width: 0;
   }
 }
