@@ -515,8 +515,72 @@ body{
   .fc-dayGridMonth-view .fc-daygrid-event .fc-event-time{ font-size: 10px !important; }
   .fc-dayGridMonth-view .fc-daygrid-event .client-name{ font-size: 11px !important; }
   .fc-dayGridMonth-view .fc-daygrid-event .unpaid{ font-size: 9.5px !important; }
+    /* 手机端防止输入时页面放大 */
+  #overlay input,
+  #overlay select,
+  #overlay textarea{
+    font-size:16px !important;
+  }
 }
 
+/* ===== Client Manager UI ===== */
+.row-inline{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.client-tools{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:10px;
+}
+
+.client-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.client-row{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:12px;
+  padding:10px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:8px;
+}
+
+.client-row .full{ grid-column: 1 / -1; }
+
+.client-row label{
+  font-size:12px;
+  opacity:.75;
+  display:block;
+  margin-bottom:4px;
+}
+
+.client-row input{
+  width:100%;
+}
+
+.client-actions{
+  grid-column: 1 / -1;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.client-actions .left{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.btn.danger{
+  border-color: rgba(220,0,0,.35);
+}
 
 @media (max-width: 600px){
 

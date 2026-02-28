@@ -822,12 +822,17 @@ function loadClients() {
   let c = safeParse(localStorage.getItem(LS_KEY_CLIENTS) || '[]', []);
   if (!Array.isArray(c) || c.length === 0) {
     c = [
-      { clientId: 'C001', name: 'Nancy', address: 'The Gap', note: '' },
-      { clientId: 'C002', name: 'Claire', address: 'Ashgrove', note: '' },
-      { clientId: 'C003', name: 'Mike', address: 'Paddington', note: '' },
+      { clientId: 'C001', name: 'Nancy', address: 'The Gap', note: '', active: true },
+      { clientId: 'C002', name: 'Claire', address: 'Ashgrove', note: '', active: true },
+      { clientId: 'C003', name: 'Mike', address: 'Paddington', note: '', active: true },
     ];
     localStorage.setItem(LS_KEY_CLIENTS, JSON.stringify(c));
+    return c;
   }
+
+  // ✅ 兼容旧数据：补齐 active / note / address
+  c = c.map(x => ({ active: true, note: '', address: '', ...x }));
+  localStorage.setItem(LS_KEY_CLIENTS, JSON.stringify(c));
   return c;
 }
 
@@ -962,12 +967,16 @@ function nextClientId() {
 
 function renderClients() {
   clientEl.innerHTML = '<option value="">请选择客户</option>';
-  clients.forEach((c) => {
-    const opt = document.createElement('option');
-    opt.value = c.clientId;
-    opt.textContent = `${c.name} (${c.clientId})`;
-    clientEl.appendChild(opt);
-  });
+
+  clients
+    .filter(c => c.active !== false)
+    .forEach((c) => {
+      const opt = document.createElement('option');
+      opt.value = c.clientId;
+      opt.textContent = `${c.name} (${c.clientId})`;
+      clientEl.appendChild(opt);
+    });
+
   const optNew = document.createElement('option');
   optNew.value = '__new__';
   optNew.textContent = '+ 新建客户';
@@ -993,6 +1002,146 @@ function updateClientAddressUI() {
   clientMapLink.textContent = `📍 ${c.address}（点我打开 Google Maps）`;
   clientMapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`;
 }
+// =============================
+// Client Manager (Edit/Deactivate/Delete)
+// =============================
+const manageClientsBtn = document.getElementById('manageClientsBtn');
+const clientOverlay = document.getElementById('clientOverlay');
+const clientCloseBtn = document.getElementById('clientCloseBtn');
+const clientSaveBtn  = document.getElementById('clientSaveBtn');
+const clientAddBtn   = document.getElementById('clientAddBtn');
+const clientList     = document.getElementById('clientList');
+const clientHint     = document.getElementById('clientHint');
+
+function openClientManager(){
+  if (!clientOverlay) return;
+  clientHint.textContent = '';
+  renderClientManager();
+  clientOverlay.style.display = 'flex';
+}
+
+function closeClientManager(){
+  if (!clientOverlay) return;
+  clientOverlay.style.display = 'none';
+}
+
+function isClientUsed(clientId){
+  return Array.isArray(allEvents) && allEvents.some(e => e.clientId === clientId);
+}
+
+function renderClientManager(){
+  if (!clientList) return;
+  clientList.innerHTML = '';
+
+  clients.forEach((c) => {
+    const row = document.createElement('div');
+    row.className = 'client-row';
+    row.dataset.id = c.clientId;
+
+    row.innerHTML = `
+      <div>
+        <label>客户名</label>
+        <input class="cm-name" value="${(c.name||'').replace(/"/g,'&quot;')}" />
+      </div>
+      <div>
+        <label>客户代码</label>
+        <input class="cm-id" value="${c.clientId}" disabled />
+      </div>
+
+      <div class="full">
+        <label>地址</label>
+        <input class="cm-address" value="${(c.address||'').replace(/"/g,'&quot;')}" />
+      </div>
+
+      <div class="full">
+        <label>备注</label>
+        <input class="cm-note" value="${(c.note||'').replace(/"/g,'&quot;')}" />
+      </div>
+
+      <div class="client-actions">
+        <div class="left">
+          <label style="margin:0; display:flex; gap:8px; align-items:center;">
+            <input type="checkbox" class="cm-active" ${c.active !== false ? 'checked' : ''}/>
+            启用（取消=停用）
+          </label>
+          ${isClientUsed(c.clientId) ? '<span class="help">⚠️ 已被历史事件使用：建议停用，不建议删除</span>' : ''}
+        </div>
+        <button type="button" class="btn danger cm-del">删除</button>
+      </div>
+    `;
+
+    row.querySelector('.cm-del').addEventListener('click', () => {
+      const id = c.clientId;
+      if (isClientUsed(id)) {
+        alert('这个客户已被历史事件使用，不能删除。你可以取消“启用”来停用它（下拉隐藏，但历史记录仍显示名字）。');
+        return;
+      }
+      if (!confirm(`确定删除客户：${c.name} (${id}) 吗？`)) return;
+
+      clients = clients.filter(x => x.clientId !== id);
+      saveClients(clients);
+      renderClients();
+      renderClientManager();
+      updateClientAddressUI();
+    });
+
+    clientList.appendChild(row);
+  });
+}
+
+function addClientFromManager(){
+  const name = (prompt('请输入新客户名字：') || '').trim();
+  if (!name) return;
+  const address = (prompt('请输入客户地址：') || '').trim();
+
+  const id = nextClientId();
+  const newClient = { clientId:id, name, address, note:'', active:true };
+
+  clients = [...clients, newClient];
+  saveClients(clients);
+  renderClients();
+  renderClientManager();
+}
+
+function saveClientManagerEdits(){
+  const rows = Array.from(clientList.querySelectorAll('.client-row'));
+
+  clients = clients.map(c => {
+    const r = rows.find(x => x.dataset.id === c.clientId);
+    if (!r) return c;
+
+    const name = (r.querySelector('.cm-name').value || '').trim();
+    const address = (r.querySelector('.cm-address').value || '').trim();
+    const note = (r.querySelector('.cm-note').value || '').trim();
+    const active = r.querySelector('.cm-active').checked;
+
+    return { ...c, name: name || c.name, address, note, active };
+  });
+
+  saveClients(clients);
+  renderClients();
+  updateClientAddressUI();
+
+  // 如果当前选中的客户被停用：清空选择，避免选到隐藏项
+  const cur = findClient(clientEl.value);
+  if (cur && cur.active === false) {
+    clientEl.value = '';
+    updateClientAddressUI();
+  }
+
+  if (clientHint) {
+    clientHint.textContent = '✅ 已保存（登录云端时会同步到 clients.json）';
+    setTimeout(() => (clientHint.textContent=''), 2000);
+  }
+  closeClientManager();
+}
+
+// wire
+if (manageClientsBtn) manageClientsBtn.addEventListener('click', openClientManager);
+if (clientCloseBtn) clientCloseBtn.addEventListener('click', closeClientManager);
+if (clientSaveBtn)  clientSaveBtn.addEventListener('click', saveClientManagerEdits);
+if (clientAddBtn)   clientAddBtn.addEventListener('click', addClientFromManager);
+if (clientOverlay)  clientOverlay.addEventListener('click', (e) => { if (e.target === clientOverlay) closeClientManager(); });
 
 clientEl.addEventListener('change', () => {
   if (clientEl.value === '__new__') {
@@ -1002,9 +1151,9 @@ clientEl.addEventListener('change', () => {
       updateClientAddressUI();
       return;
     }
-    const address = (prompt('请输入客户地址（用于自动显示与地图）：') || '').trim();
+    const address = (prompt('请输入客户地址：') || '').trim();
     const id = nextClientId();
-    const newClient = { clientId: id, name, address, note: '' };
+    const newClient = { clientId: id, name, address, note: '', active: true };  
     clients = [...clients, newClient];
     saveClients(clients);
     renderClients();

@@ -17,7 +17,7 @@
 
 <link rel="apple-touch-icon" sizes="180x180" href="./krisy-icon-180.png">
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Calendar</title>
 
   <!-- FullCalendar (CDN) -->
@@ -161,7 +161,10 @@
 
           <div class="field" id="clientField">
             <label class="req">Client</label>
-            <select id="client"></select>
+           <div class="row-inline">
+             <select id="client"></select>
+             <button class="btn" type="button" id="manageClientsBtn">管理客户</button>
+           </div>
 
             <!-- 自动显示地址 + 地图链接 -->
             <div class="help" id="clientAddressBox" style="display:none;">
@@ -235,6 +238,28 @@
   </div>
 
   <!-- 图片预览（点缩略图打开大图） -->
+     <!-- Client Manager Modal -->
+  <div class="overlay" id="clientOverlay" style="display:none;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle">
+      <div class="modal-head">
+        <h3 id="clientModalTitle">客户管理</h3>
+        <button class="btn" type="button" id="clientCloseBtn">关闭</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="client-tools">
+          <button class="btn" type="button" id="clientAddBtn">+ 新增客户</button>
+        </div>
+
+        <div class="client-list" id="clientList"></div>
+        <div class="help" id="clientHint"></div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn btn-primary" type="button" id="clientSaveBtn">保存</button>
+      </div>
+    </div>
+  </div>
   <div class="img-viewer" id="imgViewer" style="display:none;">
     <div class="img-viewer-inner">
       <button class="btn" id="imgViewerClose">关闭</button>
