@@ -518,3 +518,35 @@ body{
 }
 
 
+@media (max-width: 600px){
+
+  /* 日历更接近满屏 */
+  .wrap{ padding: 6px; }
+  .content{ padding: 0; }
+
+  /* 顶部左右与日历一致 + safe-area */
+  .topbar-inner{
+    padding-left: max(6px, env(safe-area-inset-left));
+    padding-right: max(6px, env(safe-area-inset-right));
+    column-gap: 8px;
+    font-size: clamp(12px, 3.3vw, 14px);
+  }
+
+  /* grid 子项允许收缩（关键） */
+  .topbar-inner > *{ min-width: 0; }
+
+  /* 按钮/seg 统一紧凑并自适应 */
+  .btn,
+  .seg button{
+    font-size: clamp(11px, 3.0vw, 13px);
+    padding: 6px 8px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  /* 标题栏自适应 */
+  .titlebar{
+    font-size: clamp(12px, 3.2vw, 14px);
+    min-width: 0;
+  }
+}
