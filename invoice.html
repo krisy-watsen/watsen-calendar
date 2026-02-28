@@ -477,6 +477,18 @@
 
   /* ===== 手机屏幕：只影响“看起来清晰”，不影响打印 ===== */
   @media screen and (max-width: 480px){
+    /* iPhone Safari: prevent focus zoom */
+    html{ -webkit-text-size-adjust: 100%; }
+    body{ -webkit-text-size-adjust: 100%; }
+
+    .field,
+    .cellField,
+    .detailsBox textarea,
+    select,
+    input,
+    textarea{
+  font-size: 16px !important;  /* 关键：>=16px，iOS 不会自动放大 */
+}
 
     /* 基础：禁止横向溢出 */
     html, body{ overflow-x:hidden; }
