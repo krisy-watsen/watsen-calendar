@@ -37,7 +37,6 @@ body{
 
 
   display: grid;
-  grid-template-columns: 1fr auto 1fr;  /* 左：占满  中：自适应  右：占满 */
   align-items: center;
   column-gap: 16px;
   grid-template-columns: auto 1fr auto;
@@ -335,7 +334,7 @@ body{
   box-shadow:0 0 0 4px rgba(0,0,0,.06);
 }
 /* 顶部中间：隐藏导航按钮和标题（不删DOM，避免 app.js 报错） */
-#prevBtn, #todayBtn, #nextBtn, #titlebar{
+#prevBtn,  #nextBtn, #titlebar{
   display:none !important;
 }
 /* 让状态点用 class 控制颜色 */
@@ -531,10 +530,17 @@ body{
     padding-right: max(6px, env(safe-area-inset-right));
     column-gap: 8px;
     font-size: clamp(12px, 3.3vw, 14px);
+    grid-template-columns: auto 1fr auto;
   }
+
+  /* 保证手机永远一行 */
+  .topbar-center{ flex-wrap: nowrap; }
 
   /* grid 子项允许收缩（关键） */
   .topbar-inner > *{ min-width: 0; }
+
+  /* 只在手机隐藏 prev/next/title（你不需要“今天”没关系，这里不写 todayBtn） */
+  #prevBtn, #nextBtn, #titlebar{ display:none !important; }
 
   /* 按钮/seg 统一紧凑并自适应 */
   .btn,
@@ -545,7 +551,7 @@ body{
     white-space: nowrap;
   }
 
-  /* 标题栏自适应 */
+  /* 标题栏自适应（即使隐藏也无害） */
   .titlebar{
     font-size: clamp(12px, 3.2vw, 14px);
     min-width: 0;
