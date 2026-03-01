@@ -581,6 +581,62 @@ body{
 .btn.danger{
   border-color: rgba(220,0,0,.35);
 }
+/* ===== iOS-like toggle switch ===== */
+.cm-toggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.cm-state{
+  font-weight:700;
+  min-width:40px;
+}
+
+.switch{
+  position:relative;
+  display:inline-block;
+  width:44px;
+  height:26px;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  cursor:pointer;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,.25);
+  transition:.2s;
+  border-radius: 999px;
+}
+
+.slider:before{
+  position:absolute;
+  content:"";
+  height:22px;
+  width:22px;
+  left:2px;
+  top:2px;
+  background:white;
+  transition:.2s;
+  border-radius:999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+
+.switch input:checked + .slider{
+  background: rgba(20,120,255,.85);
+}
+
+.switch input:checked + .slider:before{
+  transform: translateX(18px);
+}
+
 /* ===== Tablet (iPad) Client Manager 优化 ===== */
 @media (min-width: 601px) and (max-width: 1024px){
 
@@ -768,61 +824,7 @@ input, .field select, textarea{
   -webkit-overflow-scrolling: touch;
 }
 
-/* ===== iOS-like toggle switch ===== */
-.cm-toggle{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
 
-.cm-state{
-  font-weight:700;
-  min-width:40px;
-}
-
-.switch{
-  position:relative;
-  display:inline-block;
-  width:44px;
-  height:26px;
-}
-
-.switch input{
-  opacity:0;
-  width:0;
-  height:0;
-}
-
-.slider{
-  position:absolute;
-  cursor:pointer;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,.25);
-  transition:.2s;
-  border-radius: 999px;
-}
-
-.slider:before{
-  position:absolute;
-  content:"";
-  height:22px;
-  width:22px;
-  left:2px;
-  top:2px;
-  background:white;
-  transition:.2s;
-  border-radius:999px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
-}
-
-.switch input:checked + .slider{
-  background: rgba(20,120,255,.85);
-}
-
-.switch input:checked + .slider:before{
-  transform: translateX(18px);
-}
   /* ===== Phone: Re-layout Event modal fields ===== */
   #overlay .grid2{
     grid-template-columns: 1fr 1fr;
