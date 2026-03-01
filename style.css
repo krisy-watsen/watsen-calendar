@@ -581,6 +581,97 @@ body{
 .btn.danger{
   border-color: rgba(220,0,0,.35);
 }
+/* ===== Tablet (iPad) Client Manager 优化 ===== */
+@media (min-width: 601px) and (max-width: 1024px){
+
+  /* 只影响“客户管理弹窗” */
+  #clientOverlay .modal{
+    width: min(860px, 94vw);
+    max-height: 86vh;
+  }
+
+  #clientOverlay .client-row{
+    padding: 16px;
+    gap: 12px;
+    border-radius: 14px;
+  }
+
+  #clientOverlay .client-row label{
+    font-size: 13px;
+  }
+
+  #clientOverlay .client-row input{
+    height: 40px;
+    font-size: 16px;
+  }
+
+  /* actions 行：左边说明自然换行，删除按钮固定靠右 */
+  #clientOverlay .client-actions .left{
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  #clientOverlay .cm-del{
+    margin-left: auto;
+    padding: 8px 14px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  /* 开关那一行不要挤成一坨 */
+  #clientOverlay .cm-toggle{
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+
+  #clientOverlay .help{
+    font-size: 12px;
+    opacity: .7;
+  }
+}
+/* ===== Desktop Client Manager 优化 ===== */
+@media (min-width: 1025px){
+
+  #clientOverlay .modal{
+    width: min(980px, 76vw);
+    max-height: 88vh;
+  }
+
+  /* 电脑端更像“表单卡片”，更清爽 */
+  #clientOverlay .client-row{
+    padding: 18px;
+    gap: 14px;
+    border-radius: 16px;
+    grid-template-columns: 1.2fr 0.8fr; /* 左侧客户名更宽、右侧客户代码更窄 */
+  }
+
+  #clientOverlay .client-row label{
+    font-size: 13px;
+  }
+
+  #clientOverlay .client-row input{
+    height: 42px;
+    font-size: 15px;
+  }
+
+  /* actions：左边一排更稳定，删除按钮永远在最右 */
+  #clientOverlay .client-actions .left{
+    flex: 1;
+    flex-wrap: nowrap;
+  }
+
+  #clientOverlay .cm-del{
+    margin-left: auto;
+    padding: 8px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  #clientOverlay .help{
+    font-size: 12px;
+    opacity: .75;
+  }
+}
 
 @media (max-width: 600px){
 
