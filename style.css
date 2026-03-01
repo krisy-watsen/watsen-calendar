@@ -193,6 +193,17 @@ body{
   border-bottom:1px solid var(--line);
 }
 .modal-body{ padding:16px; }
+/* 让弹窗内容在 iPad/电脑也能内部滚动（客户管理专用） */
+#clientOverlay .modal{
+  display:flex;
+  flex-direction:column;
+  max-height: 90vh;
+}
+
+#clientOverlay .modal-body{
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
+}
 .modal-foot{
   padding:14px 16px;
   border-top:1px solid var(--line);
