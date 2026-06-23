@@ -2084,6 +2084,9 @@ async function handleSave(isDraft) {
     allEvents = loadEvents();
     refreshCalendar();
     renderMini(calendar.getDate());
+    if (gAccessToken) {
+  await syncCloudMergeNow('保存后立即同步');
+}
     closeModal();
   } catch (e) {
     console.error(e);
