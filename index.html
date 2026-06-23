@@ -218,8 +218,17 @@
               multiple
             />
 
-            <div class="thumb-grid" id="attachmentPreview"></div>
-
+            <div class="thumb-grid" id="attachmentPreview"></div> 
+            
+            <div id="uploadProgressBox" style="display:none; margin-top:10px;">
+              <div style="font-size:12px; color:#6b7280; margin-bottom:6px;">
+                Uploading：<span id="uploadProgressText">0%</span>
+              </div>
+              <div style="height:8px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
+                <div id="uploadProgressBar" style="height:100%; width:0%; background:#0a84ff; border-radius:999px;"></div>
+              </div>
+            </div>
+            
             <div class="help" id="attachmentHelp">
              
               提示：附件需要 Google 登录（云端存储在 Drive）
