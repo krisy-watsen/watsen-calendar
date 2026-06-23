@@ -2094,10 +2094,11 @@ async function handleSave(isDraft) {
     allEvents = loadEvents();
     refreshCalendar();
     renderMini(calendar.getDate());
+    closeModal();
     if (gAccessToken) {
   await syncCloudMergeNow('保存后立即同步');
 }
-    closeModal();
+
   } catch (e) {
     console.error(e);
     validationHint.textContent = e.message || '保存失败（看控制台）';
