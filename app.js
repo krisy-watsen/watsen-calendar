@@ -2087,13 +2087,10 @@ async function handleSave(isDraft) {
         const f = pendingFiles[i];
         const meta = await uploadAttachmentFile(f, row);
         uploaded.push(meta);
-
-        const percent = ((i + 1) / pendingFiles.length) * 100;
-        setUploadProgress(percent);
       }
-
+      setUploadProgress(100);
       setCloudStatus('云端：附件已上传');
-      
+       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     row.attachments = kept.concat(uploaded);
