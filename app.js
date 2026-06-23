@@ -2078,12 +2078,21 @@ async function handleSave(isDraft) {
       if (!gAccessToken) {
         throw new Error('请先 Google 登录后再上传附件。');
       }
+      
       setCloudStatus('云端：上传附件中…');
-      for (const f of pendingFiles) {
+      setUploadProgress(0);
+
+      for (let i = 0; i < pendingFiles.length; i++) {
+        const f = pendingFiles[i];
         const meta = await uploadAttachmentFile(f, row);
         uploaded.push(meta);
+
+        const percent = ((i + 1) / pendingFiles.length) * 100;
+        setUploadProgress(percent);
       }
+
       setCloudStatus('云端：附件已上传');
+      
     }
 
     row.attachments = kept.concat(uploaded);
