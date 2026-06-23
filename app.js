@@ -1236,6 +1236,29 @@ function clearAttachmentState() {
   objectUrlPool.clear();
 }
 
+function setUploadProgress(percent) {
+  const box = document.getElementById('uploadProgressBox');
+  const bar = document.getElementById('uploadProgressBar');
+  const text = document.getElementById('uploadProgressText');
+  if (!box || !bar || !text) return;
+
+  const p = Math.max(0, Math.min(100, Math.round(percent)));
+  box.style.display = 'block';
+  bar.style.width = `${p}%`;
+  text.textContent = `${p}%`;
+}
+
+function hideUploadProgress() {
+  const box = document.getElementById('uploadProgressBox');
+  const bar = document.getElementById('uploadProgressBar');
+  const text = document.getElementById('uploadProgressText');
+  if (!box || !bar || !text) return;
+
+  box.style.display = 'none';
+  bar.style.width = '0%';
+  text.textContent = '0%';
+}
+
 function openImageViewer(src) {
   imgViewerImg.src = src;
   imgViewer.style.display = 'flex';
