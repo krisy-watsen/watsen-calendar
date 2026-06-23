@@ -2138,22 +2138,24 @@ async function handleSave(isDraft) {
 
 async function handleDelete() {
   if (!editingId) return;
-  if (!confirm('确定删除这个事件吗？')) return;
+  if (!confirm('确定delete这个event吗？')) return;
 
   // 删除事件时：也尽量删掉附件文件（你自己的 Drive 文件，避免堆积）
   const row = getEditingRowSnapshot();
+  
+  removeRow(editingId);
+  allEvents = loadEvents();
+  refreshCalendar();
+  renderMini(calendar.getDate());
+  closeModal();
+  
   if (gAccessToken && Array.isArray(row?.attachments)) {
     for (const att of row.attachments) {
       if (!att?.fileId) continue;
       try { await deleteAttachmentFile(att.fileId); } catch(e){ console.error(e); }
     }
   }
-
-  removeRow(editingId);
-  allEvents = loadEvents();
-  refreshCalendar();
-  renderMini(calendar.getDate());
-  closeModal();
+  
 }
 
 // =============================
