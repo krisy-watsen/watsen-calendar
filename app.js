@@ -1930,6 +1930,7 @@ function openModal(mode, preset = {}) {
 
 function closeModal() {
   overlay.style.display = 'none';
+  hideUploadProgress();
   clearAttachmentState();
 }
 
