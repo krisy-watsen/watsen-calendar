@@ -620,9 +620,16 @@ function initGoogleLogin() {
   try { localStorage.setItem(LS_KEY_EVER_SIGNED_IN, '1'); } catch (e) {}
 
  try {
+
+  setCloudStatus('测试：A 定位主目录…');
   await ensureDriveRootFolder();
+
+  setCloudStatus('测试：B 读取 events…');
   await syncCloudMergeNow('登录后对齐');
-  await syncClientsOnLogin(); // ✅ 新增这一行
+
+  setCloudStatus('测试：C 读取 clients…');
+  await syncClientsOnLogin();
+ 
   setTimeout(backgroundSyncIfNeeded, 300);
 
 } catch (e) {
