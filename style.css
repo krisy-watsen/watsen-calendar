@@ -865,3 +865,7 @@ input, .field select, textarea{
   /* 第7行：Attachments 占满一行 */
   #attachmentField{ grid-column: 1 / -1; grid-row: 7; }
 }
+/* Today highlight */
+.fc .fc-day-today {
+  background-color: #e5e7eb !important;
+}
