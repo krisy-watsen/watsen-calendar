@@ -255,6 +255,16 @@ async function findExistingClientsFileId(dataFolderId) {
   return files[0]?.id || '';
 }
 
+async function findExistingEventsFileId(dataFolderId) {
+  const q = [
+    `name='${DRIVE_EVENTS_FILE_NAME}'`,
+    `'${dataFolderId}' in parents`,
+    'trashed=false'
+  ].join(' and ');
+  const files = await driveSearchFiles(q);
+  return files[0]?.id || '';
+}
+
 async function ensureDriveRootFolder() {
   const cached = localStorage.getItem(LS_KEY_DRIVE_ROOT_ID);
 if (cached) {
