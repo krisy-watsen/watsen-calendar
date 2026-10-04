@@ -1,0 +1,2215 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Landscaping Cost | Watsen Landscaping</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface], [data-visualize-standalone]) > body {
+  padding: 12px;
+}
+
+.cursor-interaction {
+  cursor: var(--cursor-interaction, pointer);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: var(--cursor-interaction, pointer);
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+.widget {
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  box-shadow: 0 0 0 0.5px var(--border-strong, var(--border));
+  color: var(--foreground);
+  background: var(--background);
+}
+
+#widget > :not(.card, .widget, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The shared runtime owns data-tooltip; suppress AppBlock's pseudo-tooltip. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: var(--cursor-interaction, pointer);
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled="true"]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+/* Shared preview chrome; product styles stay inside each variant. */
+.viz-dotted-background {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--foreground) 14%, transparent) 0.8px,
+    transparent 0.8px
+  );
+  background-position: center;
+  background-size: 16px 16px;
+}
+
+.viz-carousel {
+  position: relative;
+  min-width: 0;
+}
+
+.viz-carousel:has(> .viz-carousel-controls) {
+  min-height: calc(60px + var(--viz-carousel-picker-height, 0px));
+  padding-bottom: 60px;
+}
+
+.viz-carousel > [data-variant][hidden] {
+  display: none !important;
+}
+
+.viz-carousel > [data-variant] {
+  isolation: isolate;
+}
+
+.viz-carousel-controls {
+  --viz-carousel-hover: light-dark(
+    color-mix(in srgb, var(--foreground) 5.4%, transparent),
+    color-mix(in srgb, var(--foreground) 7.8%, transparent)
+  );
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  left: 50%;
+  display: flex;
+  width: max-content;
+  /* Leave room for the host's design-controls launcher at the trailing edge. */
+  max-width: calc(100% - 96px);
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  /* Match the settings dropdown chrome independently of the content font size. */
+  font-size: 13px;
+  font-weight: var(--font-weight-normal);
+  line-height: 18px;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+/* Keep authored mockup button styles out of the shared carousel chrome. */
+.viz-carousel-controls button,
+.viz-carousel-picker > summary {
+  display: flex !important;
+  height: auto !important;
+  min-height: 30px;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px;
+  padding: 0 6px !important;
+  -webkit-app-region: no-drag;
+  border: 0 !important;
+  border-radius: 14px !important;
+  color: inherit !important;
+  background: transparent !important;
+  font: inherit !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.viz-carousel-controls > button,
+.viz-carousel-picker > summary {
+  position: relative;
+  isolation: isolate;
+}
+
+.viz-carousel-controls > button {
+  --icon-size: 16px;
+  width: 30px !important;
+  padding: 0 !important;
+}
+
+.viz-carousel-picker > summary {
+  padding-inline: 12px !important;
+}
+
+.viz-carousel-controls .viz-carousel-caret {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin: 0;
+  color: inherit;
+  transform: rotate(180deg);
+}
+
+.viz-carousel-controls > button > svg,
+.viz-carousel-controls .viz-carousel-caret,
+.viz-carousel-count {
+  opacity: 0.5;
+}
+
+.viz-carousel-controls > button::before,
+.viz-carousel-picker > summary::before {
+  position: absolute;
+  z-index: -1;
+  inset: 3px;
+  border-radius: 12px;
+  content: "";
+  pointer-events: none;
+}
+
+.viz-carousel-controls > button:hover::before,
+.viz-carousel-picker > summary:hover::before {
+  background: var(--viz-carousel-hover);
+}
+
+.viz-carousel-controls > button,
+.viz-carousel-controls [data-lucide],
+.viz-carousel-controls .lucide {
+  flex-shrink: 0;
+}
+
+.viz-carousel-picker {
+  min-width: 0;
+}
+
+.viz-carousel-picker > summary {
+  min-width: 0;
+  list-style: none;
+}
+
+.viz-carousel-picker > summary::-webkit-details-marker {
+  display: none;
+}
+
+.viz-carousel-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.viz-carousel-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viz-carousel-options {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  max-height: 240px;
+  flex-direction: column;
+  gap: 2px;
+  overflow: auto;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  box-shadow: 0 4px 12px light-dark(rgb(0 0 0 / 6%), rgb(0 0 0 / 25%));
+}
+
+.viz-carousel-options > button {
+  border-radius: max(0px, calc(var(--radius-lg) - 5px)) !important;
+  width: 100% !important;
+  min-height: 28px;
+  justify-content: flex-start !important;
+  padding: 4px 8px !important;
+  font-size: var(--font-size-small) !important;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.viz-carousel-options > [aria-current="true"],
+.viz-carousel-options > button:hover {
+  background: var(--viz-carousel-hover) !important;
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed="true"],
+  [aria-selected="true"],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.viz-carousel-controls :is(button, summary):focus-visible {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 2px !important;
+}
+
+@media (pointer: coarse) {
+  .viz-carousel:has(> .viz-carousel-controls) {
+    min-height: calc(76px + var(--viz-carousel-picker-height, 0px));
+    padding-bottom: 76px;
+  }
+
+  .btn,
+  .nav-link,
+  .viz-carousel-controls button,
+  .viz-carousel-picker > summary,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type="file"]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type="color"] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="time"],
+    [type="week"]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html>body{padding:0}</style>
+
+</head>
+<body>
+<script type="application/json" id="codex-visualization-widget-state">__CODEX_VISUALIZATION_WIDGET_STATE__</script>
+<script>(() => {
+  const root = document.documentElement;
+  const mediaQuery = globalThis.matchMedia("(prefers-color-scheme: dark)");
+  const apply = Reflect.apply;
+  const isArray = Array.isArray;
+  const hasOwn = Object.hasOwn;
+  const parentWindow = globalThis.parent;
+  const stringify = JSON.stringify;
+  const parse = JSON.parse;
+  const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
+  const initialStateElement = document.getElementById(
+    "codex-visualization-widget-state",
+  );
+  const initialGlobals = parse(initialStateElement?.textContent ?? "{}");
+  initialStateElement?.remove();
+  /** @type {Record<string, unknown> | null} */
+  let state = initialGlobals.widgetState ?? null;
+  const statePersistence = initialGlobals.statePersistence ?? "none";
+  let nextStateRequestId = 0;
+  /** @type {Map<number, { resolve: () => void; reject: (error: Error) => void; timeout: ReturnType<typeof globalThis.setTimeout>; serializedState: string }>} */
+  const pendingStateWrites = new Map();
+  const persistenceError = () =>
+    Object.assign(
+      new Error("The host could not persist the widget state update"),
+      {
+        code: -32000,
+        data: { code: "widget_state_persistence_failed", retryable: false },
+      },
+    );
+  /**
+   * @param {object} prototype
+   * @param {string} property
+   */
+  const getPrototypeGetter = (prototype, property) => {
+    // oxlint-disable-next-line typescript/unbound-method -- invoked through captured Reflect.apply
+    const getter = Object.getOwnPropertyDescriptor(prototype, property)?.get;
+    if (getter == null) {
+      throw new Error(`Missing ${property} getter`);
+    }
+    return getter;
+  };
+  const getMessageData = getPrototypeGetter(MessageEvent.prototype, "data");
+  const getMessagePorts = getPrototypeGetter(MessageEvent.prototype, "ports");
+  const getMessageSource = getPrototypeGetter(MessageEvent.prototype, "source");
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const addHostMessageListener = MessagePort.prototype.addEventListener;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const postHostMessage = MessagePort.prototype.postMessage;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const startHostPort = MessagePort.prototype.start;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const stopMessagePropagation = Event.prototype.stopImmediatePropagation;
+  /** @type {MessagePort | null} */
+  let hostPort = null;
+  const postToHost = (type, payload) => {
+    if (hostPort != null) {
+      apply(postHostMessage, hostPort, [{ type, ...payload }]);
+    }
+  };
+  const openExternal = ({ href }) => {
+    if (globalThis.navigator.userActivation?.isActive === true) {
+      postToHost("open-external", { href });
+    }
+  };
+  const sendFollowUpMessage = ({ context, prompt, title }) => {
+    if (globalThis.navigator.userActivation?.isActive === true) {
+      postToHost("follow-up", { context, prompt, title });
+    }
+    return Promise.resolve();
+  };
+  /**
+   * @param {Record<string, unknown> | ((previous: Record<string, unknown> | null) => Record<string, unknown>)} next
+   * @returns {Promise<void>}
+   */
+  const setWidgetState = async (next) => {
+    const nextState = typeof next === "function" ? next(state) : next;
+    if (
+      nextState == null ||
+      typeof nextState !== "object" ||
+      isArray(nextState)
+    ) {
+      throw new TypeError("Widget state must be a JSON object");
+    }
+    const inputState = stringify(
+      nextState,
+      (_key, /** @type {unknown} */ value) => {
+        if (
+          typeof value === "undefined" ||
+          typeof value === "function" ||
+          typeof value === "symbol" ||
+          (typeof value === "number" && !Number.isFinite(value))
+        ) {
+          throw new TypeError("Widget state must be a JSON object");
+        }
+        return value;
+      },
+    );
+    const parsedState = parse(inputState);
+    if (
+      parsedState == null ||
+      typeof parsedState !== "object" ||
+      isArray(parsedState)
+    ) {
+      throw new TypeError("Widget state must be a JSON object");
+    }
+    const storedState = {
+      modelContent: null,
+      privateContent: null,
+      ...parsedState,
+    };
+    const serializedState = stringify(storedState);
+    if (encode(serializedState).length > 16 * 1024) {
+      throw new TypeError(
+        "Widget state must be a JSON object of at most 16 KiB",
+      );
+    }
+    if (
+      hasOwn(storedState, "imageIds") &&
+      (!isArray(storedState.imageIds) ||
+        storedState.imageIds.some(
+          (/** @type {unknown} */ id) => typeof id !== "string",
+        ))
+    ) {
+      throw new TypeError("Widget state imageIds must be an array of strings");
+    }
+    if (storedState.imageIds?.length > 0) {
+      throw Object.assign(
+        new TypeError("Visualization state does not support image attachments"),
+        { code: -32602, data: { code: "images_unsupported" } },
+      );
+    }
+    state = storedState;
+    globalThis.openai.widgetState = state;
+    globalThis.dispatchEvent(
+      new CustomEvent("openai:set_globals", {
+        detail: { globals: { widgetState: state } },
+      }),
+    );
+    if (statePersistence === "none") {
+      throw persistenceError();
+    }
+    const id = ++nextStateRequestId;
+    return new Promise((resolve, reject) => {
+      const timeout = globalThis.setTimeout(() => {
+        pendingStateWrites.delete(id);
+        reject(persistenceError());
+      }, 30_000);
+      pendingStateWrites.set(id, { resolve, reject, timeout, serializedState });
+      postToHost("widget-state-write", { id, state: serializedState });
+    });
+  };
+  const syncTheme = () => {
+    const theme = mediaQuery.matches ? "dark" : "light";
+    root.dataset.theme = theme;
+    globalThis.openai = {
+      ...globalThis.openai,
+      openExternal,
+      sendFollowUpMessage,
+      setWidgetState,
+      theme,
+      visualizationStyleVariables: {},
+      visualizationTheme: theme,
+      widgetState: state,
+      statePersistence,
+      stateModelContext: "none",
+    };
+    globalThis.dispatchEvent(
+      new CustomEvent("openai:set_globals", {
+        detail: { globals: globalThis.openai },
+      }),
+    );
+  };
+  const sendHeight = () => {
+    postToHost("height", {
+      height: Math.ceil(
+        Math.max(
+          document.body.scrollHeight,
+          document.body.getBoundingClientRect().height,
+        ),
+      ),
+    });
+  };
+
+  globalThis.addEventListener(
+    "message",
+    (event) => {
+      const data = apply(getMessageData, event, []);
+      const ports = apply(getMessagePorts, event, []);
+      const source = apply(getMessageSource, event, []);
+      if (
+        hostPort != null ||
+        source !== parentWindow ||
+        typeof data !== "object" ||
+        data?.type !== "codex-visualization-initialize" ||
+        !isArray(ports) ||
+        ports.length !== 1
+      ) {
+        return;
+      }
+      apply(stopMessagePropagation, event, []);
+      const nextHostPort = ports[0];
+      try {
+        apply(addHostMessageListener, nextHostPort, [
+          "message",
+          (event) => {
+            const data = apply(getMessageData, event, []);
+            if (typeof data === "object" && data?.type === "measure") {
+              sendHeight();
+            } else if (
+              typeof data === "object" &&
+              data?.type === "widget-state-result"
+            ) {
+              /** @type {unknown} */
+              const id = data.id;
+              if (typeof id !== "number") {
+                return;
+              }
+              const pending = pendingStateWrites.get(id);
+              if (pending != null) {
+                pendingStateWrites.delete(id);
+                globalThis.clearTimeout(pending.timeout);
+                if (data.ok === true) {
+                  pending.resolve();
+                } else {
+                  pending.reject(persistenceError());
+                }
+              }
+            }
+          },
+        ]);
+        apply(startHostPort, nextHostPort, []);
+      } catch {
+        return;
+      }
+      hostPort = nextHostPort;
+      for (const [id, { serializedState }] of pendingStateWrites) {
+        postToHost("widget-state-write", { id, state: serializedState });
+      }
+      sendHeight();
+    },
+    { capture: true },
+  );
+  document.currentScript?.remove();
+  mediaQuery.addEventListener("change", syncTheme);
+  globalThis.addEventListener("click", (event) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+    let element = null;
+    if (event.target instanceof globalThis.Element) {
+      element = event.target;
+    } else if (event.target instanceof globalThis.Node) {
+      element = event.target.parentElement;
+    }
+    const link = element?.closest("a[href]");
+    const href = link?.getAttribute("href");
+    if (href == null) {
+      return;
+    }
+    if (href.startsWith("#")) {
+      let id;
+      try {
+        id = decodeURIComponent(href.slice(1));
+      } catch {
+        return;
+      }
+      const target = id.length === 0 ? root : document.getElementById(id);
+      if (
+        target == null ||
+        globalThis.navigator.userActivation?.isActive !== true
+      ) {
+        return;
+      }
+      event.preventDefault();
+      postToHost("scroll-to", {
+        top: target.getBoundingClientRect().top + globalThis.scrollY,
+      });
+      return;
+    }
+    event.preventDefault();
+    openExternal({ href });
+  });
+  new ResizeObserver(sendHeight).observe(document.body);
+  syncTheme();
+})();
+</script>
+<div id="landscape-mobile" class="viz-dotted-background">
+<style>
+#landscape-mobile{--page:light-dark(#f3f3f3,#191919);--surface:light-dark(#fff,#252525);--ink:light-dark(#222,#eee);--muted:light-dark(#666,#bbb);--edge:light-dark(#bcbcbc,#666);color-scheme:light dark;padding:20px 0;font:14px/1.5 -apple-system,BlinkMacSystemFont,Arial,sans-serif;color:var(--ink)}#landscape-mobile *{box-sizing:border-box}#landscape-mobile .phone{width:100%;max-width:402px;margin:auto;border:2px solid var(--edge);border-radius:34px;background:var(--page);overflow:hidden}#landscape-mobile .status{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--surface);font-weight:500}#landscape-mobile .island{width:104px;height:25px;background:var(--ink);border-radius:20px}#landscape-mobile header{padding:12px 20px 18px;background:var(--surface);border-bottom:1px solid var(--edge)}#landscape-mobile h2{font-size:22px;font-weight:500;margin:0}#landscape-mobile h3{font-size:16px;font-weight:500;margin:0}#landscape-mobile .sub{color:var(--muted);font-size:12px;margin-top:4px}#landscape-mobile main{padding:16px}#landscape-mobile .add{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}#landscape-mobile button{font:inherit;min-height:44px;padding:9px 12px;border:1px solid var(--edge);border-radius:6px;background:var(--surface);color:var(--ink)}#landscape-mobile .item{padding:16px;background:var(--surface);border:1px solid var(--edge);border-radius:8px;margin-bottom:12px}#landscape-mobile .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}#landscape-mobile .delete{padding:6px 12px;background:var(--page);text-decoration:underline;text-underline-offset:3px}#landscape-mobile .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}#landscape-mobile label{display:block;font-size:12px;color:var(--muted)}#landscape-mobile input[type=number]{display:block;width:100%;min-width:0;margin-top:5px;padding:10px;border:1px solid var(--edge);background:var(--surface);color:var(--ink);border-radius:4px;font:16px -apple-system,BlinkMacSystemFont,Arial,sans-serif}#landscape-mobile .fixed{margin-top:5px;padding:10px;background:var(--page);border:1px solid var(--edge);border-radius:4px;color:var(--ink);font-size:16px}#landscape-mobile .amount{display:flex;justify-content:space-between;margin:14px 0;font-variant-numeric:tabular-nums}#landscape-mobile .upload{width:100%;border-style:dashed}#landscape-mobile .file{font-size:12px;color:var(--muted);overflow-wrap:anywhere;margin-top:7px}#landscape-mobile .summary{background:var(--surface);padding:18px 20px;border-top:1px solid var(--edge)}#landscape-mobile .sumrow{display:flex;justify-content:space-between;gap:12px;margin:10px 0;font-variant-numeric:tabular-nums}#landscape-mobile .total{font-size:20px;border-top:1px solid var(--edge);padding-top:14px;margin-top:14px}#landscape-mobile .primary{background:var(--ink);color:var(--surface);width:100%;margin-top:12px}#landscape-mobile .home{height:5px;width:120px;border-radius:4px;background:var(--ink);margin:18px auto 10px}#landscape-mobile [hidden]{display:none!important}#landscape-mobile .preview{padding:16px}#landscape-mobile .paper{background:var(--surface);border:1px solid var(--edge);padding:16px;margin-top:14px}#landscape-mobile .paper h3{padding-bottom:14px;border-bottom:2px solid var(--ink)}#landscape-mobile .pdfitem{padding:12px 0;border-bottom:1px solid var(--edge)}#landscape-mobile .empty{color:var(--muted);text-align:center;padding:24px 10px}@media(max-width:350px){#landscape-mobile main{padding:12px}#landscape-mobile .item{padding:12px}#landscape-mobile button{padding:8px}#landscape-mobile .phone{border-radius:24px}}
+#landscape-mobile .brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:500;margin-bottom:18px}#landscape-mobile .brandmark{display:flex;align-items:center;justify-content:center;border:1px solid var(--ink);width:42px;height:42px;border-radius:6px;font-size:26px}#landscape-mobile .brand-sub{display:block;font-size:11px;letter-spacing:2px}#landscape-mobile .photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}#landscape-mobile .photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--edge);border-radius:4px}#landscape-mobile .photos button{width:100%;font-size:12px;margin-top:6px}#landscape-mobile [data-pdfphotos] {grid-template-columns:1fr}
+#landscape-mobile header{padding:8px 14px 12px}#landscape-mobile .brand{font-size:20px;margin-bottom:10px;gap:8px}#landscape-mobile .brandmark{width:34px;height:34px;font-size:22px}#landscape-mobile h2{font-size:19px}#landscape-mobile main{padding:10px}#landscape-mobile .add{gap:8px;margin-bottom:10px}#landscape-mobile .item{padding:10px 12px;margin-bottom:8px;border-radius:6px}#landscape-mobile .head{margin-bottom:6px}#landscape-mobile .fields{grid-template-columns:75px 1fr;gap:10px}#landscape-mobile input[type=number],#landscape-mobile .fixed{padding:7px;margin-top:3px}#landscape-mobile .amount{margin:8px 0}#landscape-mobile .upload{min-height:36px;border-style:solid}#landscape-mobile .delete{border:0;background:transparent;padding:6px 4px}#landscape-mobile .summary{padding:10px 14px}#landscape-mobile .sumrow{margin:6px 0}#landscape-mobile .total{margin-top:9px;padding-top:10px}#landscape-mobile .pdfitem{padding:8px 0}#landscape-mobile .file{margin-top:4px}#landscape-mobile .attachment{padding:9px 0;border-bottom:1px solid var(--edge);overflow-wrap:anywhere}#landscape-mobile .attachment img{display:block;max-width:100%;max-height:260px;margin-top:8px;object-fit:contain}#landscape-mobile .attachment a{color:var(--ink)}
+#landscape-mobile .invoice-thumb{display:block;width:108px;height:126px;object-fit:contain;border:1px solid var(--edge);border-radius:4px;background:var(--page);margin-top:8px}#landscape-mobile .thumb-area:empty{display:none}#landscape-mobile .thumb-loading{font-size:12px;color:var(--muted);padding:8px 0}#landscape-mobile .attachment .invoice-thumb{width:108px;height:126px;max-height:none}
+#landscape-mobile .invoice-files{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}#landscape-mobile .invoice-files:empty{display:none}#landscape-mobile .file-tile{position:relative;min-width:0}#landscape-mobile .file-tile .invoice-thumb{width:100%;height:106px;margin-top:0}#landscape-mobile .file-tile .remove-file{position:absolute;right:-3px;top:-3px;z-index:1;min-height:32px;width:32px;padding:0;border-radius:50%;background:var(--surface);font-size:22px;line-height:1;border:1px solid var(--edge)}#landscape-mobile .file-name{font-size:11px;color:var(--muted);overflow-wrap:anywhere;margin-top:4px;padding-right:2px}#landscape-mobile .file-tile .thumb-loading{min-height:106px;padding:30px 4px 8px;border:1px solid var(--edge)}@media(pointer:coarse){#landscape-mobile .file-tile .remove-file{min-height:44px;width:44px}}
+#landscape-mobile .attachment .original-invoice{display:block;width:100%;height:auto;max-width:100%;max-height:none;object-fit:contain;margin:8px 0}#landscape-mobile .file-tile a{display:block;text-decoration:none}#landscape-mobile .photos a{display:block}#landscape-mobile [data-pdfphotos] img{aspect-ratio:auto;height:auto;object-fit:contain}
+#landscape-mobile{--page:light-dark(#f5f5f5,#151515);--surface:light-dark(#fff,#202020);--ink:light-dark(#101010,#fafafa);--muted:light-dark(#707070,#b0b0b0);--edge:light-dark(#e5e5e5,#363636);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;padding:16px 0;line-height:1.4}
+#landscape-mobile .phone{border:5px solid light-dark(#171717,#5a5a5a);border-radius:42px;box-shadow:0 20px 55px light-dark(#00000020,#00000060);max-width:402px}
+#landscape-mobile .status{height:48px;padding:0 23px;font-size:13px;letter-spacing:-.3px}#landscape-mobile .island{height:25px;width:106px}
+#landscape-mobile header{padding:10px 18px 16px}#landscape-mobile .brand{gap:9px;margin-bottom:18px;font-family:Georgia,'Times New Roman',serif;font-size:28px;letter-spacing:-1px;align-items:center}#landscape-mobile .brandmark{background:var(--ink);color:var(--surface);border:0;border-radius:50%;width:38px;height:38px;font-size:26px;font-style:italic;letter-spacing:-3px;padding-right:3px}#landscape-mobile .brand-sub{font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;font-size:9px;letter-spacing:3px;margin-top:0}#landscape-mobile h2{font-size:23px;letter-spacing:-.8px}#landscape-mobile header>.sub{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;margin-top:5px}
+#landscape-mobile main{padding:12px}#landscape-mobile .add{gap:8px;margin-bottom:12px}#landscape-mobile button{border-radius:9px;border-color:var(--edge);min-height:44px;font-size:13px;font-weight:500;padding:9px 12px;letter-spacing:-.1px;transition:background .15s,opacity .15s}#landscape-mobile button:hover{background:var(--page)}#landscape-mobile button:active{opacity:.65}#landscape-mobile .add button:first-child{background:var(--ink);border-color:var(--ink);color:var(--surface)}#landscape-mobile .add button:last-child{background:var(--surface)}
+#landscape-mobile .item{border:1px solid var(--edge);border-radius:12px;padding:11px 12px;margin-bottom:9px;box-shadow:0 1px 2px light-dark(#00000004,#00000015)}#landscape-mobile .head{margin-bottom:6px}#landscape-mobile h3{font-size:14px;letter-spacing:-.2px}#landscape-mobile .delete{background:transparent;border:0;text-decoration:none;color:var(--muted);font-size:12px;padding:4px 0 4px 10px;min-height:32px}#landscape-mobile .delete:hover{color:var(--ink);background:transparent}
+#landscape-mobile .fields{grid-template-columns:68px 1fr;gap:10px}#landscape-mobile label{font-size:11px;letter-spacing:.1px}#landscape-mobile input[type=number]{border-radius:7px;padding:8px 10px;border-color:var(--edge);background:var(--page);font-size:16px;font-weight:500;letter-spacing:-.4px;margin-top:4px;min-height:38px}#landscape-mobile input[type=number]:focus{outline:2px solid var(--ink);outline-offset:2px}#landscape-mobile .fixed{border:0;border-radius:7px;padding:9px 10px;margin-top:4px;background:var(--page);font-size:16px;min-height:38px}#landscape-mobile .amount{margin:9px 0 8px;font-size:12px;color:var(--muted)}#landscape-mobile .amount span:last-child{font-size:14px;color:var(--ink);font-weight:500;letter-spacing:-.3px}
+#landscape-mobile .upload{background:var(--surface);border:1px dashed var(--edge);border-radius:7px;min-height:36px;font-size:12px;color:var(--muted)}#landscape-mobile .file{display:none}#landscape-mobile .invoice-files{gap:8px;margin-top:10px}#landscape-mobile .file-tile .invoice-thumb{border-radius:7px;border-color:var(--edge)}#landscape-mobile .file-tile .remove-file{border:0;background:var(--ink);color:var(--surface);width:28px;min-height:28px;border-radius:50%;top:-4px;right:-4px;font-size:18px;box-shadow:0 2px 6px light-dark(#00000020,#00000055)}
+#landscape-mobile .photos{gap:8px;margin-top:10px}#landscape-mobile .photos img{border-radius:7px;border-color:var(--edge)}#landscape-mobile .photos button{background:transparent;color:var(--muted);border:0;min-height:32px;font-size:11px;margin:2px 0 0;padding:6px}#landscape-mobile .item>.sub{font-size:11px;margin:5px 0 8px}#landscape-mobile [data-photo-status]{display:none}
+#landscape-mobile .summary{padding:14px 18px 10px;border-top:1px solid var(--edge)}#landscape-mobile .summary .sumrow:not(.total){font-size:12px;color:var(--muted);margin:5px 0}#landscape-mobile .total{border-top:1px solid var(--edge);padding-top:12px;margin-top:10px;font-weight:500;font-size:17px;align-items:center}#landscape-mobile .total span:last-child{font-size:27px;letter-spacing:-1px}#landscape-mobile .primary{border:0;background:var(--ink);color:var(--surface);border-radius:10px;min-height:48px;margin-top:12px;font-size:14px}#landscape-mobile .primary:hover{background:var(--ink);opacity:.85}#landscape-mobile .home{width:112px;height:4px;margin:15px auto 9px}#landscape-mobile .preview{padding:12px}#landscape-mobile [data-back]{border:0;padding-left:0;background:transparent;min-height:36px}#landscape-mobile .paper{border-radius:10px;border-color:var(--edge);padding:16px;margin-top:8px}#landscape-mobile .paper>.brand{font-size:24px;margin-bottom:16px}#landscape-mobile .paper h3{border-bottom:1px solid var(--edge);padding-bottom:12px}#landscape-mobile .pdfitem{padding:8px 0;border-color:var(--edge);font-size:13px}#landscape-mobile .attachment{border-color:var(--edge);font-size:13px;padding:12px 0}#landscape-mobile .attachment img{border-radius:6px}#landscape-mobile .sub{font-size:11px}#landscape-mobile [data-export-status]{margin-top:8px}@media(max-width:350px){#landscape-mobile .phone{border-width:3px}#landscape-mobile .brand{font-size:25px}#landscape-mobile header{padding:10px 14px 14px}}@media(prefers-reduced-motion:reduce){#landscape-mobile button{transition:none}}
+#landscape-mobile .report-source-hidden{display:none}#landscape-mobile .report-page{--page:#f5f5f5;--surface:#fff;--ink:#111;--muted:#707070;--edge:#e5e5e5;background:#fff;color:#111;position:relative;padding:22px 20px 26px;margin:12px 0;border:0;border-radius:0;box-shadow:0 2px 12px #00000010;font-family:Arial,sans-serif;overflow:hidden}#landscape-mobile .report-page .brand{font-size:25px;margin-bottom:20px}#landscape-mobile .report-page h3{font-size:12px;letter-spacing:.7px;text-transform:uppercase;border-bottom:1px solid #111;padding-bottom:9px;margin:10px 0}#landscape-mobile .report-page .pdfitem{border-bottom:1px solid #eee;padding:8px 0}#landscape-mobile .report-page .sumrow{font-size:11px;margin:4px 0}#landscape-mobile .report-page .sub{font-size:10px}#landscape-mobile .report-totals{margin-top:12px;padding-top:10px}#landscape-mobile .report-totals .total{border-top:2px solid #111;padding-top:10px;margin-top:10px}#landscape-mobile .report-totals .total span:first-child{font-size:13px}#landscape-mobile .report-totals .total span:last-child{font-size:24px}#landscape-mobile .report-invoice{margin:10px 0;color:#111;font-size:11px}#landscape-mobile .report-invoice img,#landscape-mobile .report-photo img{display:block;width:100%;height:auto;object-fit:contain;margin:7px auto;border:0;border-radius:0}#landscape-mobile .report-footer{position:absolute;left:20px;right:20px;bottom:10px;padding-top:7px;border-top:1px solid #eee;font-size:7px;letter-spacing:1px;color:#777}#landscape-mobile .report-content{overflow:visible}#landscape-mobile .report-page .brandmark{background:#111;color:#fff}
+#landscape-mobile .report-page{display:flex;flex-direction:column;padding:24px 22px 22px;box-sizing:border-box;letter-spacing:normal;line-height:1.5}#landscape-mobile .report-content{flex:0 0 auto;display:flow-root}#landscape-mobile .report-footer{position:static;flex:0 0 auto;margin-top:auto;padding:10px 0 0;border-top:1px solid #e5e5e5;font-size:8px;line-height:1.5;letter-spacing:.4px;white-space:normal;color:#707070}#landscape-mobile .report-page .pdfitem{padding:10px 0 12px}#landscape-mobile .report-page .pdfitem .sumrow{margin:0 0 7px;gap:14px;line-height:1.6;letter-spacing:0}#landscape-mobile .report-page .pdfitem .sumrow span:first-child{font-size:12px;letter-spacing:0;line-height:1.6}#landscape-mobile .report-page .pdfitem .sub{line-height:1.6;letter-spacing:0}#landscape-mobile .report-invoice{padding:2px 0 12px;margin:12px 0;line-height:1.6}#landscape-mobile .report-invoice>div{font-size:12px;line-height:1.6;letter-spacing:0;margin-bottom:12px}#landscape-mobile .report-invoice img{margin:0 auto;object-fit:contain}#landscape-mobile .report-page h3{letter-spacing:.2px;line-height:1.6;margin:12px 0 14px;padding-bottom:10px}#landscape-mobile .report-photo{padding-bottom:12px}#landscape-mobile .report-page .brand{letter-spacing:0}#landscape-mobile .report-page .brand-sub{letter-spacing:1px}
+#landscape-mobile .exact-pdf-page{display:block;width:100%;height:auto;background:#fff;box-shadow:0 2px 10px #00000015;margin:10px 0 14px;border:1px solid var(--edge)}
+#landscape-mobile .included-label{font-size:11px;color:var(--muted);margin:13px 0 7px;font-weight:500}#landscape-mobile .payment{margin-top:16px;padding-top:14px;border-top:1px solid var(--edge)}#landscape-mobile .payment h3{font-size:11px;letter-spacing:1px}#landscape-mobile .payment dl{display:grid;grid-template-columns:70px 1fr;gap:6px 12px;font-size:12px;margin:12px 0 0}#landscape-mobile .payment dt{color:var(--muted)}#landscape-mobile .payment dd{margin:0;letter-spacing:.2px}
+#landscape-mobile .brand{display:inline-flex;gap:12px;align-items:center;padding:10px 16px 10px 10px;border:1px solid #111;background:#fff;color:#111;box-shadow:4px 4px 0 #00000024;font-family:Georgia,'Times New Roman',serif;font-size:29px;letter-spacing:-.8px;margin-bottom:22px;border-radius:0;max-width:100%;box-sizing:border-box}
+#landscape-mobile .brandmark{flex:0 0 44px;width:44px;height:44px;background:#111;color:#fff;border:0;border-radius:0;font-family:Georgia,'Times New Roman',serif;font-size:30px;font-style:normal;letter-spacing:-2px;padding-right:2px}
+#landscape-mobile .brand-sub{font-family:Arial,sans-serif;font-size:9px;letter-spacing:2.4px;margin-top:3px;line-height:1.3}
+</style>
+<style>
+html,body{margin:0;background:#f5f5f5;color:#111;color-scheme:light}
+#landscape-mobile{padding:0 0 24px;color-scheme:light}
+#landscape-mobile .phone{max-width:480px;border:0;border-radius:0;min-height:100vh}
+#landscape-mobile .status,#landscape-mobile .home{display:none}
+#landscape-mobile .calendar-back{display:block;width:fit-content;margin:0 0 16px;color:#555;font:13px/1.5 Arial,sans-serif;text-decoration:none;padding:10px 0}
+#landscape-mobile button,#landscape-mobile a{cursor:pointer}
+#landscape-mobile header{padding-top:max(12px,env(safe-area-inset-top))}
+</style>
+<div class="phone" aria-label="iPhone cost breakdown">
+<div class="status" aria-hidden="true"><span>9:41</span><div class="island"></div><span>5G ▰</span></div>
+<header><a class="calendar-back" href="./index.html">← Back to Calendar</a><div class="brand" aria-label="Watsen Landscaping"><span class="brandmark">W</span><div>Watsen<span class="brand-sub">LANDSCAPING</span></div></div><h2>Cost Breakdown</h2><div class="sub">Landscape cost · AUD</div></header>
+<div data-editor><main><div class="add"><button type="button" data-addinvoice class="cursor-interaction">＋ Add invoice</button><button type="button" data-addlabor class="cursor-interaction">＋ Labor cost</button></div><div data-items></div><section class="item"><h3>Completed Work <span class="sub">(optional)</span></h3><div class="sub"></div><button type="button" data-addphotos class="upload cursor-interaction" style="margin-top:12px">+ Add photos</button><input type="file" accept="image/*" multiple data-photo-input hidden aria-label="Completed work photo"><div data-photos class="photos"></div><div class="sub" data-photo-status aria-live="polite"></div></section></main>
+<div class="summary"><div aria-live="polite"><div class="sumrow total"><span>Total Cost</span><span data-total></span></div><div class="included-label">Included in Total Cost</div><div class="sumrow"><span>Materials Cost</span><span data-invoice-total></span></div><div class="sumrow"><span>Labor Cost</span><span data-labor-total></span></div></div><div class="payment"><h3>PAYMENT METHOD</h3><dl><dt>Name</dt><dd>LIN HUASEN</dd><dt>BSB</dt><dd>014-111</dd><dt>Account</dt><dd>171 173 045</dd><dt>PayID</dt><dd>0404210661</dd></dl></div><button type="button" data-preview class="primary cursor-interaction">Preview Client PDF ↗</button></div></div>
+<div data-previewpanel class="preview" hidden><button type="button" data-back class="cursor-interaction">← Edit costs</button><div class="paper"><div class="brand"><span class="brandmark">W</span><div>Watsen<span class="brand-sub">LANDSCAPING</span></div></div><h3>Landscape Cost Breakdown</h3><div data-pdfitems></div><div class="sumrow"><span>Materials Cost</span><span data-invoice-total></span></div><div class="sumrow"><span>Labor Cost</span><span data-labor-total></span></div><div class="sumrow total"><span>Total (AUD)</span><span data-total></span></div><section data-attachments-section hidden><h3 style="margin-top:16px">Attached Invoices</h3><div data-attachments></div></section><section data-pdfphotos-section hidden><h3 style="margin-top:24px">Completed Work</h3><div data-pdfphotos class="photos"></div></section></div><div data-report-pages></div><button type="button" data-download class="primary cursor-interaction">Download PDF</button><div class="sub" data-export-status aria-live="polite"></div></div>
+<div class="home" aria-hidden="true"></div>
+</div>
+<script>
+(()=>{const root=document.getElementById('landscape-mobile'),list=root.querySelector('[data-items]');let number=0;const photos=[];const money=n=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD'}).format(n);
+function numeric(label,value,key){const wrap=document.createElement('label');wrap.textContent=label;const input=document.createElement('input');input.type='number';input.min='0';input.step='any';input.inputMode='decimal';input.value=value;input.dataset[key]='';wrap.append(input);return wrap;}
+const thumbnailCache=new WeakMap();let pdfRenderer;
+function renderInvoiceFiles(item,container,status,upload){container.querySelectorAll('[data-url]').forEach(el=>URL.revokeObjectURL(el.dataset.url));container.replaceChildren();item.invoiceFiles.forEach((file,index)=>{const tile=document.createElement('div');tile.className='file-tile';const preview=document.createElement('a');preview.className='thumb-area cursor-interaction';preview.href=URL.createObjectURL(file);preview.dataset.url=preview.href;preview.target='_blank';preview.rel='noopener';preview.setAttribute('aria-label','View original invoice');const remove=document.createElement('button');remove.type='button';remove.className='remove-file cursor-interaction';remove.textContent='×';remove.setAttribute('aria-label',`Remove file ${file.name}`);remove.onclick=()=>{item.invoiceFiles.splice(index,1);renderInvoiceFiles(item,container,status,upload);update()};const caption=document.createElement('div');caption.className='file-name';caption.textContent=file.name;tile.append(preview,remove);container.append(tile);showThumbnail(preview,file)});status.textContent='';upload.textContent=item.invoiceFiles.length?'+ Add more files':'+ Upload files'}
+function thumbnail(file){if(thumbnailCache.has(file))return thumbnailCache.get(file);const task=(async()=>{if(file.type.startsWith('image/')){const bitmap=await createImageBitmap(file);const canvas=document.createElement('canvas'),scale=Math.min(1,400/Math.max(bitmap.width,bitmap.height));canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();return canvas.toDataURL('image/png')}if(!pdfRenderer)pdfRenderer=(async()=>{const worker=await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs');globalThis.pdfjsWorker=worker;return import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs')})();const lib=await pdfRenderer;const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false,useSystemFonts:true}).promise;try{const first=await doc.getPage(1);const base=first.getViewport({scale:1}),viewport=first.getViewport({scale:Math.min(1,400/base.width)}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await first.render({canvasContext:canvas.getContext('2d'),viewport}).promise;return canvas.toDataURL('image/png')}finally{await doc.destroy()}})();thumbnailCache.set(file,task);return task}
+async function showThumbnail(container,file){const token={};container.previewToken=token;container.replaceChildren();const loading=document.createElement('div');loading.className='thumb-loading';loading.textContent='Loading preview…';container.append(loading);try{const src=await thumbnail(file);if(container.previewToken!==token||!container.isConnected)return;const image=document.createElement('img');image.className='invoice-thumb';image.src=src;image.alt=file.name.toLowerCase().endsWith('.pdf')?'Invoice preview - first page':'Invoice image preview';container.replaceChildren(image)}catch{if(container.previewToken!==token||!container.isConnected)return;loading.textContent='Preview unavailable. The original file is still attached.'}}
+function attached(){return Array.from(list.querySelectorAll('[data-kind="invoice"]')).flatMap(item=>(item.invoiceFiles||[]).map((file,index)=>({name:item.dataset.name,file,index})))}
+function renderAttachments(){fullPdfTasks=[];const container=root.querySelector('[data-attachments]');container.querySelectorAll('[data-url]').forEach(el=>URL.revokeObjectURL(el.dataset.url));container.replaceChildren();const files=attached();root.querySelector('[data-attachments-section]').hidden=!files.length;files.forEach(({name,file})=>{const row=document.createElement('div');row.className='attachment';const title=document.createElement('div');title.textContent=name;const url=URL.createObjectURL(file),link=document.createElement('a');link.href=url;link.target='_blank';link.rel='noopener';link.dataset.url=url;link.setAttribute('aria-label','View original '+name);row.append(title,link);container.append(row);if(file.type.startsWith('image/')){const img=document.createElement('img');img.className='original-invoice';img.src=url;img.alt=name;link.append(img)}else{fullPdfTasks.push(showFullPdf(link,file))}})}
+async function showFullPdf(container,file){const loading=document.createElement('div');loading.className='thumb-loading';loading.textContent='Loading invoice pages…';container.append(loading);try{await thumbnail(file);const lib=await pdfRenderer;const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false,useSystemFonts:true}).promise;try{container.replaceChildren();for(let n=1;n<=doc.numPages;n++){if(!container.isConnected)break;const page=await doc.getPage(n),base=page.getViewport({scale:1}),viewport=page.getViewport({scale:1200/base.width});const canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;const img=document.createElement('img');img.className='original-invoice';img.src=canvas.toDataURL('image/png');img.alt='Invoice page '+n;container.append(img)}}finally{await doc.destroy()}}catch{loading.textContent='Open original PDF';container.replaceChildren(loading)}}
+
+async function imageBytes(file){const bitmap=await createImageBitmap(file);const canvas=document.createElement('canvas');const scale=Math.min(1,1800/Math.max(bitmap.width,bitmap.height));canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.9));if(!blob)throw Error('Unable to read image');return new Uint8Array(await blob.arrayBuffer())}
+async function buildNativeReport(lib,rows,invoices,photos,imageBytes){
+ const {PDFDocument,StandardFonts,rgb}=lib,doc=await PDFDocument.create();
+ doc.setTitle('Watsen Landscaping - Cost Breakdown');
+ const regular=await doc.embedFont(StandardFonts.Helvetica),bold=await doc.embedFont(StandardFonts.HelveticaBold),serif=await doc.embedFont(StandardFonts.TimesRoman);
+ const ink=rgb(.07,.07,.07),gray=rgb(.45,.45,.45),rule=rgb(.87,.87,.87),W=595.28,H=841.89,L=44,R=W-44,B=70;let page,y;
+ function text(str,x,yy,size=11,font=regular,color=ink){page.drawText(String(str),{x,y:yy,size,font,color})}
+ function right(str,x,yy,size=11,font=regular){text(str,x-font.widthOfTextAtSize(String(str),size),yy,size,font)}
+ function divider(yy,color=rule){page.drawLine({start:{x:L,y:yy},end:{x:R,y:yy},thickness:.6,color})}
+ function newPage(){const firstPage=doc.getPageCount()===0;page=doc.addPage([W,H]);y=H-48;if(firstPage){const top=H-36,base=top-66;page.drawRectangle({x:L+4,y:base-4,width:232,height:66,color:rgb(.85,.85,.85)});page.drawRectangle({x:L,y:base,width:232,height:66,color:rgb(1,1,1),borderColor:ink,borderWidth:1.2});page.drawRectangle({x:L+10,y:base+10,width:46,height:46,color:ink});text('W',L+17,base+21,30,serif,rgb(1,1,1));text('Watsen',L+69,base+31,29,serif);page.drawText('LANDSCAPING',{x:L+70,y:base+15,size:8,font:bold,color:ink,characterSpacing:2});y=base-28;}}
+ function ensure(h){if(y-h<B)newPage()}
+ function tableHead(){text('Description',L,y,9,bold,gray);right('Qty / Hours',300,y,9,bold);right('Unit Price',414,y,9,bold);right('Amount',R,y,9,bold);y-=12;divider(y);y-=22}
+ newPage();text('COST BREAKDOWN',L,y,12,bold);y-=30;tableHead();let total=0,materials=0,labor=0;
+ rows.forEach((row,index)=>{const reserve=index===rows.length-1?175:32;if(y-reserve<B){newPage();tableHead()}const amount=Math.round(row.qty*row.rate*100)/100;total+=amount;if(row.kind==='invoice')materials+=amount;else labor+=amount;text(row.name,L,y,11,regular);right(row.qty+(row.kind==='labor'?' hr':''),300,y);right(row.rate.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}),414,y);right(amount.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}),R,y);y-=13;divider(y);y-=20});
+ ensure(136);y-=5;text('Total Cost (AUD)',L,y,13,bold);right('$'+total.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}),R,y,21,bold);y-=22;divider(y,ink);y-=23;text('Included in Total Cost',L,y,10,bold,gray);y-=21;text('Materials Cost',L,y,11);right('$'+materials.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}),R,y,11);y-=21;text('Labor Cost',L,y,11);right('$'+labor.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}),R,y,11);y-=17;text('These amounts are included in the total above.',L,y,9,regular,gray);y-=28;
+ ensure(118);text('PAYMENT METHOD',L,y,11,bold);y-=14;divider(y);y-=22;[['Name','LIN HUASEN'],['BSB','014-111'],['Account','171 173 045'],['PayID','0404210661']].forEach(([label,value])=>{text(label+':',L,y,10,regular,gray);text(value,L+70,y,11);y-=20});y-=14;
+
+ async function placeAsset(asset,label,section){const ideal=Math.min((R-L)/asset.width,580/asset.height),idealH=asset.height*ideal;const overhead=section?60:32;let available=y-B-overhead;if(available<Math.min(idealH,220)){newPage();available=y-B-overhead}if(section){text(section,L,y,11,bold);y-=16;divider(y);y-=22}text(label,L,y,10,bold);y-=18;const scale=Math.min(ideal,(y-B-12)/asset.height),width=asset.width*scale,height=asset.height*scale;const x=L+((R-L)-width)/2;const pos={x,y:y-height,width,height};if(asset.type==='pdf')page.drawPage(asset.resource,pos);else page.drawImage(asset.resource,pos);y-=height+22;}
+ let invoiceSection=true;for(const entry of invoices){if(entry.file.type==='application/pdf'||entry.file.name.toLowerCase().endsWith('.pdf')){let source;try{source=await PDFDocument.load(await entry.file.arrayBuffer())}catch{throw Error(entry.name+': please replace the unreadable or password-protected PDF.')}const embedded=await doc.embedPdf(source,source.getPageIndices());for(let i=0;i<embedded.length;i++){const resource=embedded[i];await placeAsset({resource,width:resource.width,height:resource.height,type:'pdf'},entry.name+(embedded.length>1?' / '+(i+1)+' of '+embedded.length:''),invoiceSection?'ATTACHED INVOICES':null);invoiceSection=false}}else{const resource=await doc.embedJpg(await imageBytes(entry.file));await placeAsset({resource,width:resource.width,height:resource.height,type:'image'},entry.name,invoiceSection?'ATTACHED INVOICES':null);invoiceSection=false}}
+ for(let i=0;i<photos.length;i++){const resource=await doc.embedJpg(await imageBytes(photos[i].file));await placeAsset({resource,width:resource.width,height:resource.height,type:'image'},'Photo '+(i+1),i===0?'COMPLETED WORK':null)}
+ const pages=doc.getPages();pages.forEach((p,index)=>{p.drawLine({start:{x:L,y:48},end:{x:R,y:48},thickness:.5,color:rule});p.drawText('WATSEN LANDSCAPING',{x:L,y:32,size:8,font:regular,color:gray});const label=(index+1)+' / '+pages.length;p.drawText(label,{x:R-regular.widthOfTextAtSize(label,8),y:32,size:8,font:regular,color:gray})});return doc.save();
+}
+
+let previewBuild=Promise.resolve(),reportBytes=null,fullPdfTasks=[];
+async function paginateReport(){const pages=root.querySelector('[data-report-pages]'),status=root.querySelector('[data-export-status]'),button=root.querySelector('[data-download]');reportBytes=null;button.disabled=true;root.querySelector('.paper').classList.add('report-source-hidden');pages.replaceChildren();status.textContent='Preparing preview…';try{const lib=await import('https://esm.sh/pdf-lib@1.17.1');const rows=Array.from(list.querySelectorAll('.item')).map(item=>({name:item.dataset.name,kind:item.dataset.kind,qty:item.dataset.kind==='invoice'?1:Math.max(0,Number(item.querySelector('[data-qty]').value)||0),rate:Math.max(0,Number(item.querySelector('[data-rate]').value)||0)}));const bytes=await buildNativeReport(lib,rows,attached(),photos,imageBytes);if(!pdfRenderer)pdfRenderer=(async()=>{const worker=await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs');globalThis.pdfjsWorker=worker;return import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs')})();const renderer=await pdfRenderer;const pdf=await renderer.getDocument({data:bytes.slice(),isEvalSupported:false,useSystemFonts:true}).promise;try{for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i),viewport=page.getViewport({scale:2}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;const image=document.createElement('img');image.src=canvas.toDataURL('image/png');image.alt='Client PDF page '+i;image.className='exact-pdf-page';pages.append(image)}}finally{await pdf.destroy()}reportBytes=bytes;status.textContent='';button.disabled=false}catch(error){status.textContent='Unable to prepare PDF: '+error.message;throw error}}
+root.querySelector('[data-download]').onclick=async()=>{const status=root.querySelector('[data-export-status]');try{await previewBuild;if(!reportBytes)throw Error('Please generate a preview first.');const url=URL.createObjectURL(new Blob([reportBytes],{type:'application/pdf'})),link=document.createElement('a');link.href=url;link.download='Watsen-Landscaping-Cost-Breakdown.pdf';root.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);status.textContent='PDF ready. Save it to your device.'}catch(error){status.textContent=error.message}};
+
+function add(kind,rate=0,qty=1){const item=document.createElement('section');item.className='item';item.dataset.kind=kind;item.dataset.name=kind==='invoice'?`Invoice ${++number}`:'Labor cost';const head=document.createElement('div');head.className='head';const title=document.createElement('h3');title.textContent=item.dataset.name;const del=document.createElement('button');del.type='button';del.textContent='Delete';del.className='delete cursor-interaction';del.setAttribute('aria-label',`Delete ${item.dataset.name}`);del.onclick=()=>{item.remove();update()};head.append(title,del);item.append(head);const fields=document.createElement('div');fields.className='fields';if(kind==='invoice'){const label=document.createElement('label');label.textContent='Qty (fixed)';const fixed=document.createElement('div');fixed.className='fixed';fixed.textContent='1';label.append(fixed);fields.append(label,numeric('Invoice amount $',rate,'rate'));}else{fields.append(numeric('Hours',qty,'qty'),numeric('Hourly rate $',rate,'rate'))}item.append(fields);const amount=document.createElement('div');amount.className='amount';const caption=document.createElement('span');caption.textContent='Amount';const value=document.createElement('span');value.dataset.amount='';amount.append(caption,value);item.append(amount);if(kind==='invoice'){const file=document.createElement('input');file.type='file';file.accept='.pdf,image/*';file.multiple=true;file.hidden=true;item.invoiceFiles=[];file.setAttribute('aria-label',`${item.dataset.name} file`);const upload=document.createElement('button');upload.type='button';upload.className='upload cursor-interaction';upload.textContent='+ Upload files';upload.onclick=()=>file.click();const thumbs=document.createElement('div');thumbs.className='invoice-files';const status=document.createElement('div');status.className='file';status.textContent='';status.setAttribute('aria-live','polite');file.onchange=()=>{const selected=Array.from(file.files).filter(f=>f.type.startsWith('image/')||f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf'));item.invoiceFiles.push(...selected);file.value='';renderInvoiceFiles(item,thumbs,status,upload);update()};item.append(upload,file,thumbs,status)}list.append(item);update()}
+function update(){let inv=0,labor=0;const ordered=Array.from(list.querySelectorAll('.item')).sort((a,b)=>(a.dataset.kind==='labor')-(b.dataset.kind==='labor'));number=0;ordered.forEach(item=>{list.append(item);item.dataset.name=item.dataset.kind==='invoice'?`Invoice ${++number}`:'Labor cost';item.querySelector('h3').textContent=item.dataset.name;item.querySelector('.delete').setAttribute('aria-label',`Delete ${item.dataset.name}`);const file=item.querySelector('input[type=file]');if(file)file.setAttribute('aria-label',`${item.dataset.name} file`)});const pdf=root.querySelector('[data-pdfitems]');pdf.replaceChildren();ordered.forEach(item=>{const rate=Math.max(0,Number(item.querySelector('[data-rate]').value)||0),qty=item.dataset.kind==='invoice'?1:Math.max(0,Number(item.querySelector('[data-qty]').value)||0),cost=Math.round(rate*qty*100)/100;if(item.dataset.kind==='invoice')inv+=cost;else labor+=cost;item.querySelector('[data-amount]').textContent=money(cost);const row=document.createElement('div');row.className='pdfitem';const line=document.createElement('div');line.className='sumrow';const label=document.createElement('span');label.textContent=item.dataset.name;const total=document.createElement('span');total.textContent=money(cost);line.append(label,total);const detail=document.createElement('div');detail.className='sub';detail.textContent=`${qty}${item.dataset.kind==='labor'?' hr':''} × ${money(rate)}`;row.append(line,detail);pdf.append(row)});[['invoice-total',inv],['labor-total',labor],['total',inv+labor]].forEach(([key,value])=>root.querySelectorAll(`[data-${key}]`).forEach(el=>el.textContent=money(value)));renderAttachments();let empty=list.querySelector('.empty');if(!ordered.length){if(!empty){empty=document.createElement('div');empty.className='empty';empty.textContent='No costs yet. Add an invoice or labor cost.';list.append(empty)}}else if(empty)empty.remove()}
+function renderPhotos(){const editor=root.querySelector('[data-photos]'),pdf=root.querySelector('[data-pdfphotos]');editor.replaceChildren();pdf.replaceChildren();photos.forEach((photo,index)=>{const wrap=document.createElement('div');const img=document.createElement('img');img.src=photo.url;img.alt=`Completed work photo ${index+1}`;const remove=document.createElement('button');remove.type='button';remove.className='cursor-interaction';remove.textContent='Remove photo';remove.onclick=()=>{URL.revokeObjectURL(photo.url);photos.splice(index,1);renderPhotos()};const original=document.createElement('a');original.href=photo.url;original.target='_blank';original.rel='noopener';original.className='cursor-interaction';original.setAttribute('aria-label','View original completed work photo');original.append(img);wrap.append(original,remove);editor.append(wrap);const copy=original.cloneNode(true);pdf.append(copy)});root.querySelector('[data-pdfphotos-section]').hidden=!photos.length;root.querySelector('[data-photo-status]').textContent=photos.length?`${photos.length} photos added`:''}
+root.querySelector('[data-addphotos]').onclick=()=>root.querySelector('[data-photo-input]').click();root.querySelector('[data-photo-input]').onchange=e=>{Array.from(e.target.files).filter(file=>file.type.startsWith('image/')).forEach(file=>photos.push({url:URL.createObjectURL(file),file}));e.target.value='';renderPhotos()};
+root.querySelector('[data-addinvoice]').onclick=()=>add('invoice');root.querySelector('[data-addlabor]').onclick=()=>add('labor');root.addEventListener('input',e=>{if(e.target.type==='number')update()});root.querySelector('[data-preview]').onclick=()=>{update();root.querySelector('[data-editor]').hidden=true;root.querySelector('[data-previewpanel]').hidden=false;root.querySelector('.paper').classList.remove('report-source-hidden');previewBuild=paginateReport();previewBuild.catch(error=>root.querySelector('[data-export-status]').textContent=error.message)};root.querySelector('[data-back]').onclick=()=>{root.querySelector('[data-editor]').hidden=false;root.querySelector('[data-previewpanel]').hidden=true};add('invoice',0);
+})();
+</script>
+</div>
+
+<script src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script>
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (event) => {
+    for (const target of event.composedPath()) {
+      if (target?.nodeType === Node.ELEMENT_NODE) {
+        const trigger = target.closest("[data-tooltip]");
+        if (trigger) return trigger;
+      }
+    }
+    return null;
+  };
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) => {
+    lastPointerWasTouch =
+      event.type === "pointerdown" && event.pointerType === "touch";
+  };
+  const handleTouchClick = (event) => {
+    const isTouch = event.pointerType === "touch" || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch && activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() => {
+      if (activeTrigger === trigger && !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) => {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handlers = {
+    pointerover: handlePointerOpen,
+    pointerdown: handlePointer,
+    pointercancel: handlePointer,
+    click: handleTouchClick,
+    pointerout: handleLeave,
+    focusin: handleFocusIn,
+    focusout: handleLeave,
+    keydown: handleKeyDown,
+    contextmenu: handleContextMenu,
+  };
+  const roots = new Map();
+  const handledEvents = new WeakSet();
+  const handleEvent = (event) => {
+    if (handledEvents.has(event)) return;
+    handledEvents.add(event);
+    handlers[event.type](event);
+  };
+  const discoverRoots = (node) => {
+    if (node.shadowRoot) listen(node.shadowRoot);
+    for (const element of node.querySelectorAll("*")) {
+      if (element.shadowRoot) listen(element.shadowRoot);
+    }
+  };
+  const listen = (root) => {
+    if (roots.has(root)) return;
+    for (const type of Object.keys(handlers)) root.addEventListener(type, handleEvent);
+    const observer = new window.MutationObserver((records) => {
+      for (const { addedNodes } of records) {
+        for (const node of addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE) discoverRoots(node);
+        }
+      }
+      for (const [root, cleanup] of roots) {
+        if (root.host && !root.host.isConnected) {
+          cleanup();
+          roots.delete(root);
+        }
+      }
+      if (activeTrigger && !activeTrigger.isConnected) closeTooltip(false);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+    roots.set(root, () => {
+      observer.disconnect();
+      for (const type of Object.keys(handlers)) root.removeEventListener(type, handleEvent);
+    });
+    discoverRoots(root);
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    for (const cleanup of roots.values()) cleanup();
+    roots.clear();
+    tooltip = null;
+  };
+
+  // Events between children of one shadow root never reach the document.
+  listen(document);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-tabs">
+(() => {
+  const selector = '.nav[role="tablist"] [role="tab"]';
+  const disabled = ':disabled,[aria-disabled="true"]';
+  const selectTab = (selected) => {
+    const panelId = selected.getAttribute("aria-controls");
+    for (const tab of selected.closest('[role="tablist"]').querySelectorAll('[role="tab"]')) {
+      const active = tab === selected;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-selected", String(active));
+      const id = tab.getAttribute("aria-controls");
+      const panel = id && document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden && selected.id) {
+          panel.setAttribute("aria-labelledby", selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) => {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === "click") {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]'),
+    ).filter((candidate) => !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === "Home") {
+      next = 0;
+    } else if (event.key === "End") {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  };
+
+  for (const list of document.querySelectorAll('.nav[role="tablist"]')) {
+    const selected =
+      list.querySelector('[role="tab"][aria-selected="true"]') ??
+      list.querySelector('[role="tab"].active') ??
+      list.querySelector('[role="tab"]');
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener("click", interact);
+  document.addEventListener("keydown", interact);
+  window.addEventListener("pagehide", () => {
+    document.removeEventListener("click", interact);
+    document.removeEventListener("keydown", interact);
+  }, { once: true });
+})();
+</script>
+<script id="codex-visualization-carousel">
+  (() => {
+    for (const root of document.querySelectorAll(".viz-carousel")) {
+      const panels = Array.from(
+        root.querySelectorAll(":scope > [data-variant]"),
+      );
+      if (panels.length === 0) {
+        continue;
+      }
+      root.setAttribute("role", "group");
+      panels.forEach((panel, index) => {
+        panel.hidden = index !== 0;
+        panel.setAttribute("role", "group");
+        if (!panel.hasAttribute("aria-label")) {
+          panel.setAttribute("aria-label", panel.dataset.variant);
+        }
+      });
+      root.dataset.activeVariant = panels[0].dataset.variant;
+      if (panels.length === 1) {
+        continue;
+      }
+
+      const controls = document.createElement("div");
+      controls.className = "viz-carousel-controls";
+      // Portable copy of the settings dropdown's legacy glyph; no 14px icon-package preset matches it.
+      // https://github.com/openai/openai/blob/master/codex/codex-apps/webview/src/icons/chevron.svg
+      controls.innerHTML = `
+      <button type="button" class="viz-carousel-previous cursor-interaction"><i data-lucide="chevron-left" aria-hidden="true"></i></button>
+      <details class="viz-carousel-picker">
+        <summary class="cursor-interaction">
+          <span class="viz-carousel-count tabular-nums"></span>
+          <span class="viz-carousel-name"></span>
+          <svg class="viz-carousel-caret" width="14" height="14" viewBox="0 0 20 21" fill="none" aria-hidden="true" focusable="false">
+            <path d="M15.2793 7.71101C15.539 7.45131 15.961 7.45131 16.2207 7.71101C16.4804 7.97071 16.4804 8.39272 16.2207 8.65242L10.4707 14.4024C10.211 14.6621 9.78902 14.6621 9.52932 14.4024L3.77932 8.65242L3.69436 8.54792C3.52385 8.28979 3.55205 7.93828 3.77932 7.71101C4.00659 7.48374 4.3581 7.45554 4.61623 7.62605L4.72073 7.71101L10 12.9903L15.2793 7.71101Z" fill="currentColor" stroke="currentColor" stroke-width="0.6" />
+          </svg>
+        </summary>
+        <div class="viz-carousel-options"></div>
+      </details>
+      <button type="button" class="viz-carousel-next cursor-interaction"><i data-lucide="chevron-right" aria-hidden="true"></i></button>`;
+      const previous = controls.querySelector(".viz-carousel-previous");
+      const next = controls.querySelector(".viz-carousel-next");
+      const picker = controls.querySelector(".viz-carousel-picker");
+      const summary = picker.querySelector("summary");
+      const count = controls.querySelector(".viz-carousel-count");
+      const name = controls.querySelector(".viz-carousel-name");
+      const options = controls.querySelector(".viz-carousel-options");
+      const status = document.createElement("span");
+      status.className = "sr-only";
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      status.setAttribute("aria-atomic", "true");
+      previous.setAttribute(
+        "aria-label",
+        root.dataset.previousLabel ?? "Previous variant",
+      );
+      next.setAttribute("aria-label", root.dataset.nextLabel ?? "Next variant");
+
+      let active = 0;
+      let mousePointerId = null;
+      let summaryPointerHandled = false;
+      summary.addEventListener("pointerdown", (event) => {
+        summaryPointerHandled =
+          event.pointerType === "mouse" && event.button === 0 && !event.ctrlKey;
+        if (!summaryPointerHandled) {
+          return;
+        }
+        event.preventDefault();
+        summary.focus({ preventScroll: true });
+        picker.open = !picker.open;
+        mousePointerId = picker.open ? event.pointerId : null;
+      });
+      summary.addEventListener("click", (event) => {
+        if (summaryPointerHandled && event.detail > 0) {
+          event.preventDefault();
+        }
+      });
+      const choices = panels.map((panel, index) => {
+        const choice = document.createElement("button");
+        choice.type = "button";
+        choice.className = "cursor-interaction";
+        choice.textContent = panel.dataset.variant;
+        choice.addEventListener("click", () => {
+          select(index);
+          summary.focus();
+        });
+        choice.addEventListener("pointerup", (event) => {
+          if (
+            picker.open &&
+            event.pointerType === "mouse" &&
+            event.button === 0 &&
+            event.pointerId === mousePointerId
+          ) {
+            choice.click();
+          }
+        });
+        options.appendChild(choice);
+        return choice;
+      });
+      const select = (index) => {
+        const changed = active !== index;
+        active = index;
+        panels.forEach((panel, position) => {
+          panel.hidden = position !== active;
+          choices[position].setAttribute(
+            "aria-current",
+            String(position === active),
+          );
+        });
+        root.dataset.activeVariant = panels[active].dataset.variant;
+        count.textContent = `${active + 1} / ${panels.length}`;
+        name.textContent = panels[active].dataset.variant;
+        picker.open = false;
+        mousePointerId = null;
+        if (changed) {
+          status.textContent = `${count.textContent}: ${name.textContent}`;
+        }
+      };
+      previous.addEventListener("click", () =>
+        select((active + panels.length - 1) % panels.length),
+      );
+      next.addEventListener("click", () =>
+        select((active + 1) % panels.length),
+      );
+      picker.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && picker.open) {
+          event.preventDefault();
+          picker.open = false;
+          mousePointerId = null;
+          summary.focus();
+          return;
+        }
+        if (event.altKey || event.ctrlKey || event.metaKey) {
+          return;
+        }
+        const index = choices.indexOf(document.activeElement);
+        let nextIndex;
+        if (event.key === "ArrowDown") {
+          nextIndex = index < 0 ? active : (index + 1) % choices.length;
+        } else if (event.key === "ArrowUp") {
+          nextIndex = index < 0 ? active : (index + choices.length - 1) % choices.length;
+        } else if (picker.open && event.key === "Home") {
+          nextIndex = 0;
+        } else if (picker.open && event.key === "End") {
+          nextIndex = choices.length - 1;
+        } else {
+          return;
+        }
+        event.preventDefault();
+        picker.open = true;
+        choices[nextIndex].focus();
+      });
+      picker.addEventListener("focusout", (event) => {
+        if (!picker.contains(event.relatedTarget)) {
+          picker.open = false;
+          mousePointerId = null;
+        }
+      });
+      const dismiss = (event) => {
+        if (!summary.contains(event.target)) {
+          mousePointerId = null;
+        }
+        if (!picker.contains(event.target)) {
+          picker.open = false;
+        }
+      };
+      const endPointerSelection = () => {
+        mousePointerId = null;
+      };
+      const sizePicker = () => {
+        root.style.setProperty(
+          "--viz-carousel-picker-height",
+          `${picker.open ? options.offsetHeight : 0}px`,
+        );
+      };
+      picker.addEventListener("toggle", sizePicker);
+      window.addEventListener("resize", sizePicker);
+      document.addEventListener("pointerdown", dismiss);
+      document.addEventListener("pointerup", endPointerSelection);
+      document.addEventListener("pointercancel", endPointerSelection);
+      window.addEventListener("blur", endPointerSelection);
+      window.addEventListener(
+        "pagehide",
+        () => {
+          document.removeEventListener("pointerdown", dismiss);
+          document.removeEventListener("pointerup", endPointerSelection);
+          document.removeEventListener("pointercancel", endPointerSelection);
+          window.removeEventListener("blur", endPointerSelection);
+          window.removeEventListener("resize", sizePicker);
+        },
+        { once: true },
+      );
+      root.append(controls, status);
+      select(0);
+    }
+  })();
+</script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script>
+(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+
+</body>
+</html>
